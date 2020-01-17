@@ -1,0 +1,1 @@
+A playground to follow the book "The haskell school of music" using scala.

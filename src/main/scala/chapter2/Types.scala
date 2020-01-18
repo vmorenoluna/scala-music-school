@@ -8,4 +8,5 @@ final object Types {
   type Duration = Rational
   type AbsPitch = Int
   type Tempo = Rational
+  type PhraseAttribute = Any     // TODO
 }

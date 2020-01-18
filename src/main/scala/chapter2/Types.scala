@@ -6,4 +6,6 @@ final object Types {
   type Octave = Int
   type Pitch = (PitchClass, Octave)
   type Duration = Rational
+  type AbsPitch = Int
+  type Tempo = Rational
 }

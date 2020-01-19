@@ -1,6 +1,7 @@
 package chapter2
 
 import chapter2.Types.{AbsPitch, Duration, Octave, PhraseAttribute, Pitch}
+import spire.math.Rational
 
 sealed trait Primitive[A]
 final case class Note[A](duration: Duration, features: A) extends Primitive[A]
@@ -58,5 +59,41 @@ final object Music {
   def b(o: Octave, d: Duration): Music[Pitch] = note(d, (B, o))
   def bs(o: Octave, d: Duration): Music[Pitch] = note(d, (Bs, o))
   def bss(o: Octave, d: Duration): Music[Pitch] = note(d, (Bss, o))
+
+  def bn(): Duration = 2
+  def wn(): Duration = 1
+  def hn(): Duration = Rational(1,2)
+  def qn(): Duration = Rational(1,4)
+  def en(): Duration = Rational(1,8)
+  def sn(): Duration = Rational(1,16)
+  def tn(): Duration = Rational(1,32)
+  def sfn(): Duration = Rational(1,64)
+  def dwn(): Duration = Rational(3,2)
+  def dhn(): Duration = Rational(3,4)
+  def dqn(): Duration = Rational(3,8)
+  def den(): Duration = Rational(3,16)
+  def dsn(): Duration = Rational(3,32)
+  def dtn(): Duration = Rational(3,64)
+  def ddhn(): Duration = Rational(7,8)
+  def ddqn(): Duration = Rational(7,16)
+  def dden(): Duration = Rational(7,32)
+
+  def bnr(): Music[Pitch] = rest(bn)
+  def wnr(): Music[Pitch] = rest(wn)
+  def hnr(): Music[Pitch] = rest(hn)
+  def qnr(): Music[Pitch] = rest(qn)
+  def enr(): Music[Pitch] = rest(en)
+  def snr(): Music[Pitch] = rest(sn)
+  def tnr(): Music[Pitch] = rest(tn)
+  def sfnr(): Music[Pitch] = rest(sfn)
+  def dwnr(): Music[Pitch] = rest(dwn)
+  def dhnr(): Music[Pitch] = rest(dhn)
+  def dqnr(): Music[Pitch] = rest(dqn)
+  def denr(): Music[Pitch] = rest(den)
+  def dsnr(): Music[Pitch] = rest(dsn)
+  def dtnr(): Music[Pitch] = rest(dtn)
+  def ddhnr(): Music[Pitch] = rest(ddhn)
+  def ddqnr(): Music[Pitch] = rest(ddqn)
+  def ddenr(): Music[Pitch] = rest(dden)
 
 }

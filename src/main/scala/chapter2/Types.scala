@@ -9,4 +9,8 @@ final object Types {
   type AbsPitch = Int
   type Tempo = Rational
   type PhraseAttribute = Any     // TODO
+
+  final implicit class Fraction(private val self: Long) extends AnyVal {
+    def /(other: Long) = Rational(self, other)
+  }
 }

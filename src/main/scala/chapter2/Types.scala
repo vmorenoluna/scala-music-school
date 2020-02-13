@@ -1,6 +1,7 @@
 package chapter2
 
 import spire.math.Rational
+import scala.math.Integral.Implicits._
 
 final object Types {
   type Octave = Int
@@ -13,4 +14,53 @@ final object Types {
   final implicit class Fraction(private val self: Long) extends AnyVal {
     def /(other: Long) = Rational(self, other)
   }
+
+  def absPitch(p: Pitch): AbsPitch = 12 * (p._2 + 1) + pcToInt(p._1)
+
+  def pcToInt(pitchClass: PitchClass): Int = pitchClass match {
+    case Cff => -2
+    case Cf => -1
+    case C => 0
+    case Dff => 0
+    case Cs => 1
+    case Df => 1
+    case Css => 2
+    case D => 2
+    case Eff => 2
+    case Ds => 3
+    case Ef => 3
+    case Fff => 3
+    case Dss => 4
+    case E => 4
+    case Ff => 4
+    case Es => 5
+    case F => 5
+    case Gff => 5
+    case Ess => 6
+    case Fs => 6
+    case Gf => 6
+    case Fss => 7
+    case G => 7
+    case Aff => 7
+    case Gs => 8
+    case Af => 8
+    case Gss => 9
+    case A => 9
+    case Bff => 9
+    case As => 10
+    case Bf => 10
+    case Ass => 11
+    case B => 11
+    case Bs => 12
+    case Bss => 13
+  }
+
+  def pitch(ap: AbsPitch): Pitch = {
+    val (oct, n) = ap /% 12
+    val pitchClass = List(C,Cs,D,Ds,E,F,Fs,G,Gs,A,As,B)(n)
+    (pitchClass, oct-1)
+  }
+
+  def trans(value: Int, p: Pitch): Pitch = pitch(absPitch(p) + value)
+
 }

@@ -1,0 +1,30 @@
+-----------------------------------------------------------------------
+{-# LINE 810 "Music.lhs" #-}
+absPitch           :: Pitch -> AbsPitch
+absPitch (pc,oct)  = 12*oct + pcToInt pc
+{-# LINE 864 "Music.lhs" #-}
+pcToInt     :: PitchClass -> Int
+pcToInt pc  = case pc of
+  Cff  -> -2;  Cf  -> -1;  C  -> 0;   Cs  -> 1;   Css  -> 2;
+  Dff  -> 0;   Df  -> 1;   D  -> 2;   Ds  -> 3;   Dss  -> 4;
+  Eff  -> 2;   Ef  -> 3;   E  -> 4;   Es  -> 5;   Ess  -> 6;
+  Fff  -> 3;   Ff  -> 4;   F  -> 5;   Fs  -> 6;   Fss  -> 7;
+  Gff  -> 5;   Gf  -> 6;   G  -> 7;   Gs  -> 8;   Gss  -> 9;
+  Aff  -> 7;   Af  -> 8;   A  -> 9;   As  -> 10;  Ass  -> 11;
+  Bff  -> 9;   Bf  -> 10;  B  -> 11;  Bs  -> 12;  Bss  -> 13
+{-# LINE 895 "Music.lhs" #-}
+pitch     :: AbsPitch -> Pitch
+pitch ap  =
+    let (oct, n) = divMod ap 12
+    in  ([C,Cs,D,Ds,E,F,Fs,G,Gs,A,As,B] !! n, oct)
+{-# LINE 918 "Music.lhs" #-}
+trans      :: Int -> Pitch -> Pitch
+trans i p  = pitch (absPitch p + i)
+-----------------------------------------------------------------------
+
+trans i (trans j p) = trans (i+j) p
+trans i (trans j p) =
+trans i (pitch (absPitch p + j) ) =
+trans i (scale !! ((absPitch (p + j) `mod` notesPerScale)), (absPitch (p + j) `div` 12)) =
+=> trans is a linear translation, the effect of composed operations is additive
+= trans (i+j) p

@@ -15,7 +15,7 @@ final object Types {
     def /(other: Long) = Rational(self, other)
   }
 
-  def absPitch(p: Pitch): AbsPitch = 12 * (p._2 + 1) + pcToInt(p._1)
+  def absPitch(p: Pitch): AbsPitch = 12 * (p._2) + pcToInt(p._1)
 
   def pcToInt(pitchClass: PitchClass): Int = pitchClass match {
     case Cff => -2
@@ -58,7 +58,7 @@ final object Types {
   def pitch(ap: AbsPitch): Pitch = {
     val (oct, n) = ap /% 12
     val pitchClass = List(C,Cs,D,Ds,E,F,Fs,G,Gs,A,As,B)(n)
-    (pitchClass, oct-1)
+    (pitchClass, oct)
   }
 
   def trans(value: Int, p: Pitch): Pitch = pitch(absPitch(p) + value)

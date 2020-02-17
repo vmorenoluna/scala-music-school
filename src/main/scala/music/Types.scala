@@ -1,4 +1,4 @@
-package chapter2
+package music
 
 import spire.math.Rational
 import scala.math.Integral.Implicits._

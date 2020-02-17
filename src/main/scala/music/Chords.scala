@@ -1,6 +1,6 @@
-package chapter2
+package music
 
-import chapter2.Types.{Duration, Octave, Pitch}
+import music.Types.{Duration, Octave, Pitch}
 import Music._
 
 object Chords {

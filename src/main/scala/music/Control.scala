@@ -1,6 +1,6 @@
-package chapter2
+package music
 
-import chapter2.Types.{AbsPitch, PhraseAttribute, Tempo => TempoValue}
+import music.Types.{AbsPitch, PhraseAttribute, Tempo => TempoValue}
 
 sealed trait Control
 

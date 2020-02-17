@@ -1,4 +1,4 @@
-package chapter2
+package music
 
 sealed trait PitchClass
 

@@ -1,6 +1,6 @@
-package chapter2
+package music
 
-import chapter2.Types._
+import music.Types._
 
 sealed trait Primitive[A]
 final case class Note[A](duration: Duration, features: A) extends Primitive[A]

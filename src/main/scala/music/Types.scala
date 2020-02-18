@@ -63,4 +63,12 @@ final object Types {
 
   def trans(value: Int, p: Pitch): Pitch = pitch(absPitch(p) + value)
 
+  def transM(ap: AbsPitch, mp: Music[Pitch]): Music[Pitch] = mp match {
+    case Prim(Note(d, p)) => Prim(Note(d, trans(ap, p)))
+    case Prim(Rest(d)) => Prim(Rest(d))
+    // TODO
+    // the operators :+: and :=: are actually cases of Music. They need to be matched here
+    case Modify(control, music) => Modify(control, transM(ap, mp))
+  }
+
 }

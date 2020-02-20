@@ -29,6 +29,7 @@ fromBlues(Prim(Note d (MT, o))) = Prim(Note d (Ef, o))
 fromBlues(Prim(Note d (Fo, o))) = Prim(Note d (F, o))
 fromBlues(Prim(Note d (Fi, o))) = Prim(Note d (G, o))
 fromBlues(Prim(Note d (MS, o))) = Prim(Note d (Bf, o))
+fromBlues(Prim(Rest d)) = Prim(Rest d)
 fromBlues(m1 :+: m2) = fromBlues m1 :+: fromBlues m2
 fromBlues(m1 :=: m2) = fromBlues m1 :=: fromBlues m2
 fromBlues(Modify x m) = Modify x (fromBlues m)

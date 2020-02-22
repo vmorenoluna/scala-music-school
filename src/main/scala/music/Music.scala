@@ -7,11 +7,13 @@ final case class Note[A](duration: Duration, features: A) extends Primitive[A]
 final case class Rest[A](duration: Duration) extends Primitive[A]
 
 sealed trait Music[A] {
-  def :+:(that: Music[A]): Music[A] = ???  // TODO sequential composition
-  def :=:(that: Music[A]): Music[A] = ???  // TODO parallel composition
+  def :+:(that: Music[A]): Music[A] = new :+:(this, that)
+  def :=:(that: Music[A]): Music[A] = new :=:(this, that)
 }
 final case class Prim[A](primitive: Primitive[A]) extends Music[A]
 final case class Modify[A](control: Control, music: Music[A]) extends Music[A]
+final case class :+:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO sequential composition
+final case class :=:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO parallel composition
 
 final object Music {
 

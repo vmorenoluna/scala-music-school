@@ -28,6 +28,8 @@ class Blues {
     case Prim(Note(d, (MinorSeventh, o))) => Prim(Note(d, (Bf, o)))
     case Prim(Rest(d)) => Prim(Rest(d))
     case Modify(control, music) => Modify(control, fromBlues(music))
+    case :+:(m, n) => fromBlues(m) :+: fromBlues(n)
+    case :=:(m, n) => fromBlues(m) :=: fromBlues(n)
   }
 
 }

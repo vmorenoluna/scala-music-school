@@ -66,8 +66,8 @@ final object Types {
   def transM(ap: AbsPitch, mp: Music[Pitch]): Music[Pitch] = mp match {
     case Prim(Note(d, p)) => Prim(Note(d, trans(ap, p)))
     case Prim(Rest(d)) => Prim(Rest(d))
-    // TODO
-    // the operators :+: and :=: are actually cases of Music. They need to be matched here
+    case :+:(m, n) => transM(ap, m) :+: transM (ap, n)
+    case :=:(m, n) => transM(ap, m) :=: transM (ap, n)
     case Modify(control, music) => Modify(control, transM(ap, mp))
   }
 

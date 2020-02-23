@@ -16,7 +16,7 @@ class Types extends UnitSpec {
           val pitchClass: PitchClass = p._1
           val octave: Octave = p._2
 
-          List(C,Cs,D,Ds,E,F,Fs,G,Gs,A,As,B) should contain oneElementOf List(pitchClass)
+          List(C,Cs,D,Ds,E,F,Fs,G,Gs,A,As,B) should contain (pitchClass)
           octave should be >= 0
         }
     }

@@ -2,7 +2,7 @@ import music._
 import music.Types._
 import org.scalatest.prop.Generator
 
-class Types extends UnitSpec {
+class TypesSpec extends UnitSpec {
 
   val absPitchGen: Generator[AbsPitch] = posIntValues
   val pitchClassGen: Generator[PitchClass] = specificValues(C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B)

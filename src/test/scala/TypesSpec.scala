@@ -22,17 +22,23 @@ class TypesSpec extends UnitSpec {
     }
   }
 
-  "absPitch (pitch)" should "return a valid absolute pitch for each pitch" in {
+  "absPitch (p)" should "return a valid absolute pitch for each pitch" in {
     forAll (pitchGen) { pitch =>
       absPitch(pitch) should be >= 0
     }
   }
 
-  "absPitch (pitch ap)" should "return ap" in {
+  "absPitch (pitch ap)" should "return the original absolute pitch" in {
     forAll (absPitchGen) { absolutePitch =>
       whenever (absolutePitch > 0) {
         absPitch(pitch(absolutePitch)) shouldEqual absolutePitch
       }
+    }
+  }
+
+  "pitch (absPitch p)" should "return the original pitch" in {
+    forAll (pitchGen) { p =>
+        pitch(absPitch(p)) shouldEqual p
     }
   }
 

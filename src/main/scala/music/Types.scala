@@ -71,4 +71,8 @@ final object Types {
     case Modify(control, music) => Modify(control, transM(ap, mp))
   }
 
+  def toAbsPitches(pitches: List[Pitch]): List[AbsPitch] = pitches.map(absPitch(_))
+  def toPitches(absPitches: List[AbsPitch]): List[Pitch] = absPitches.map(pitch(_))
+  def !!!(p1: Pitch, p2: Pitch): Pitch = if (absPitch(p1) > absPitch(p2)) p1 else p2
+
 }

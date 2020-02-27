@@ -97,4 +97,8 @@ final object Music {
   def ddqnr(): Music[Pitch] = rest(ddqn)
   def ddenr(): Music[Pitch] = rest(dden)
 
+  def line[A](notes: List[Music[A]]): Music[A] = notes.fold(rest[A](0))(_:+:_)
+  def chord[A](notes: List[Music[A]]): Music[A] = notes.fold(rest[A](0))(_:=:_)
+  def maxPitch(pitches: List[Pitch]): Pitch = pitches.fold(pitch(0))(!!!)
+
 }

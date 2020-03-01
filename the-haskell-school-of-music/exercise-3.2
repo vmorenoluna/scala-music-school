@@ -1,0 +1,12 @@
+flip :: (a -> b -> c) -> (b -> a -> c)
+flip f x y = f y x
+
+flip (flip f) x y =
+=> g = flip f
+flip g x y =
+g y x =
+=> g = flip f
+flip f y x =
+f x y
+
+Hence flip (flip f) = f

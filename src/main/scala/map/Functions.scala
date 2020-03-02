@@ -23,4 +23,9 @@ object Functions {
     case m1 :=: m2 => staccato(m1) :=: staccato(m2)
   }
 
+  def applyEach[A,B](functions: List[A => B], value: A): List[B] =
+    functions.map(f => f(value))
+
+
+
 }

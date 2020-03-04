@@ -26,6 +26,9 @@ object Functions {
   def applyEach[A,B](functions: List[A => B], value: A): List[B] =
     functions.map(f => f(value))
 
+  def applyAll[A](functions: List[A => A], value: A): A =
+    functions.foldRight(value)((f1,f2) => f1(f2))
+
 
 
 }

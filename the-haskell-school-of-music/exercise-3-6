@@ -1,0 +1,8 @@
+Which of the following functions is more efficient, and why?
+
+appendr, appendl :: [[a]] -> [a]
+appendr = foldr (flip (++)) []
+appendl = foldl (flip (++)) []
+
+foldl -> constant space
+foldr -> space linear in the length of its list argument

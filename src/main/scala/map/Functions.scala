@@ -29,6 +29,22 @@ object Functions {
   def applyAll[A](functions: List[A => A], value: A): A =
     functions.foldRight(value)((f1,f2) => f1(f2))
 
+  def doubleEach(ns: List[Int]): List[Int] =
+    ns.map(_ * 2)
 
+  def pairAndOne(ns: List[Int]): List[(Int,Int)] =
+    ns.map(n => (n,n+1))
+
+  def addEachPair(pairs: List[(Int,Int)]): List[Int] =
+    pairs.map(p => p._1 + p._2)
+
+  def addPairPointwiseUnzip(pairs: List[(Int,Int)]): (Int,Int) =
+    pairs unzip match { case (l1, l2) => (l1.sum, l2.sum) }
+
+  def addPairPointwiseFoldLeft(pairs: List[(Int,Int)]): (Int,Int) =
+    pairs.foldLeft((0, 0)) { case ((accA, accB), (a, b)) => (accA + a, accB + b) }
+
+  def fuse(ds: List[Duration], notes: List[Duration => Music[Pitch]]): List[Music[Pitch]] =
+    ds zip notes map { case (a,b) => b(a) }
 
 }

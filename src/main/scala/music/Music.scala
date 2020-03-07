@@ -1,6 +1,7 @@
 package music
 
 import music.Types._
+import scala.math.{max, min}
 
 sealed trait Primitive[A]
 final case class Note[A](duration: Duration, features: A) extends Primitive[A]
@@ -100,5 +101,8 @@ final object Music {
   def line[A](notes: List[Music[A]]): Music[A] = notes.fold(rest[A](0))(_:+:_)
   def chord[A](notes: List[Music[A]]): Music[A] = notes.fold(rest[A](0))(_:=:_)
   def maxPitch(pitches: List[Pitch]): Pitch = pitches.fold(pitch(0))(!!!)
+
+  def maxAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(0)(max)
+  def minAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(0)(min)
 
 }

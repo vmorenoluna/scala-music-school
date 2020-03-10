@@ -24,7 +24,7 @@ final object Music {
   def transpose[A](i: AbsPitch, m: Music[A]): Music[A] = Modify(Transpose(i), m)
   def instrument[A](i: InstrumentName, m: Music[A]): Music[A] = Modify(Instrument(i), m)
   def phrase[A](pa: List[PhraseAttribute], m: Music[A]): Music[A] = Modify(Phrase(pa), m)
-  def keysig[A](pc: PitchClass, mo: Mode, m: Music[A]): Music[A] = Modify(KeySig(pc, mo), m)
+  def keysig[A](pc: PitchClass, mo: Modes, m: Music[A]): Music[A] = Modify(KeySig(pc, mo), m)
 
   def cff(o: Octave, d: Duration): Music[Pitch] = note(d, (Cff, o))
   def cf(o: Octave, d: Duration): Music[Pitch] = note(d, (Cf, o))

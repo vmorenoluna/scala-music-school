@@ -8,8 +8,8 @@ final case class Note[A](duration: Duration, features: A) extends Primitive[A]
 final case class Rest[A](duration: Duration) extends Primitive[A]
 
 sealed trait Music[A] {
-  def :+:(that: Music[A]): Music[A] = new :+:(this, that)
-  def :=:(that: Music[A]): Music[A] = new :=:(this, that)
+  def :+:(that: Music[A]): Music[A] = new :+:(that, this)
+  def :=:(that: Music[A]): Music[A] = new :=:(that, this)
 }
 final case class Prim[A](primitive: Primitive[A]) extends Music[A]
 final case class Modify[A](control: Control, music: Music[A]) extends Music[A]
@@ -98,9 +98,9 @@ final object Music {
   def ddqnr(): Music[Pitch] = rest(ddqn)
   def ddenr(): Music[Pitch] = rest(dden)
 
-  def line[A](notes: List[Music[A]]): Music[A] = notes.fold(rest[A](0))(_:+:_)
-  def chord[A](notes: List[Music[A]]): Music[A] = notes.fold(rest[A](0))(_:=:_)
-  def maxPitch(pitches: List[Pitch]): Pitch = pitches.fold(pitch(0))(!!!)
+  def line[A](notes: List[Music[A]]): Music[A] = notes.foldRight(rest[A](0))(_:+:_)
+  def chord[A](notes: List[Music[A]]): Music[A] = notes.foldRight(rest[A](0))(_:=:_)
+  def maxPitch(pitches: List[Pitch]): Pitch = pitches.foldRight(pitch(0))(!!!)
 
   def maxAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(0)(max)
   def minAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(0)(min)

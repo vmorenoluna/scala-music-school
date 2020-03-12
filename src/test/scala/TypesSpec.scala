@@ -1,13 +1,7 @@
-import music._
 import music.Types._
-import org.scalatest.prop.Generator
+import music._
 
 class TypesSpec extends UnitSpec {
-
-  val absPitchGen: Generator[AbsPitch] = posIntValues
-  val pitchClassGen: Generator[PitchClass] = specificValues(C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B)
-  val octaveGen: Generator[Octave] = intsBetween(0, 10)
-  def pitchGen: Generator[Pitch] = tuple2s(pitchClassGen, octaveGen)
 
   "pitch (ap)" should "return a valid pitch for each positive absolute pitch" in {
     forAll (absPitchGen) { absolutePitch =>

@@ -10,6 +10,7 @@ final object Types {
   type AbsPitch = Int
   type Tempo = Rational
   type PhraseAttribute = Any     // TODO
+  type Step = Int
 
   final implicit class Fraction(private val self: Long) extends AnyVal {
     def /(other: Long) = Rational(self, other)
@@ -74,5 +75,8 @@ final object Types {
   def toAbsPitches(pitches: List[Pitch]): List[AbsPitch] = pitches.map(absPitch(_))
   def toPitches(absPitches: List[AbsPitch]): List[Pitch] = absPitches.map(pitch(_))
   def !!!(p1: Pitch, p2: Pitch): Pitch = if (absPitch(p1) > absPitch(p2)) p1 else p2
+
+  def hs(): Step = 1
+  def ws(): Step = 2
 
 }

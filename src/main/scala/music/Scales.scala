@@ -21,5 +21,22 @@ object Scales {
       case (ap1, ap2) => line(chromaticScale(ap1, ap2))
     }
 
+  def makeScale(p: Pitch, pattern: List[Step]): Music[Pitch] = {
+    val absScale: List[AbsPitch] = absPitch(p) :: pattern.scanLeft(absPitch(p)) {
+      case(p1,p2) => p1 + p2
+    }
+
+    line (for {
+            ap <- absScale
+            p = pitch(ap)
+            n = note(qn, p)
+          } yield n
+    )
+  }
+
+  val list = List("a", "b", "c")
+  list.drop(1).scanLeft(list.head) {
+    case (r, c) => r + "|" + c
+  }
 
 }

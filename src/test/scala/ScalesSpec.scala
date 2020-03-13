@@ -22,9 +22,21 @@ class ScalesSpec extends UnitSpec {
     val p1: Pitch = (C,4)
     val p2: Pitch = (E,4)
 
-    chromaticScale(p1, p2) should equal(:+:(c(4,qn),:+:(cs(4,qn),:+:(d(4,qn),:+:(ds(4,qn),:+:(e(4,qn),Prim(Rest(0))))))))
+    chromaticScale(p1, p2) should equal(
+      c(4,qn) :+: cs(4,qn) :+: d(4,qn) :+: ds(4,qn) :+: e(4,qn) :+: rest(0)
+    )
 
     // c :+: cs :+: d = d.:+:(c :+: cs) = :+:(c :+: cs, d) = :+:(cs.:+:(c), d) = :+:(:+:(c, cs), d)
+  }
+
+  "makeScale (pitch, pattern)" should "return the correct scale" in {
+    val pitch: Pitch = (C,4)
+    val pattern: List[Step] = List(ws, ws, hs, ws, ws, ws)
+
+    makeScale(pitch, pattern) should equal (
+      c(4,qn) :+: d(4,qn) :+: e(4,qn) :+: f(4,qn) :+: g(4,qn) :+: music.Music.a(4,qn) :+: b(4,qn) :+: rest(0)
+    )
+
   }
 
   private def verifyPattern(scale: Music[Pitch], pattern: List[Step]): Boolean = ??? // TODO it needs an implementation for :+: and :=:

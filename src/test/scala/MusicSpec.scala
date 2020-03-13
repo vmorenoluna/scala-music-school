@@ -8,7 +8,7 @@ class MusicSpec extends UnitSpec {
     val notes: List[Music[Pitch]] = List(c(4,qn), d(4,qn), e(4,qn), fs(4,qn), gs(4,qn))
 
     line(notes) should equal(
-      c(4,qn) :+: d(4,qn) :+: e(4,qn) :+: fs(4,qn) :+: gs(4,qn) :+: Prim[Pitch](Rest(0))
+      c(4,qn) :+: d(4,qn) :+: e(4,qn) :+: fs(4,qn) :+: gs(4,qn) :+: rest(0)
     )
   }
 
@@ -21,7 +21,7 @@ class MusicSpec extends UnitSpec {
         e(4,qn) :=:
         fs(4,qn) :=:
         gs(4,qn) :=:
-        Prim[Pitch](Rest(0))
+        rest(0)
     )
   }
 

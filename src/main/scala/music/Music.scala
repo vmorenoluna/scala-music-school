@@ -102,7 +102,7 @@ final object Music {
   def chord[A](notes: List[Music[A]]): Music[A] = notes.foldRight(rest[A](0))(_:=:_)
   def maxPitch(pitches: List[Pitch]): Pitch = pitches.foldRight(pitch(0))(!!!)
 
-  def maxAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(0)(max)
-  def minAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(0)(min)
+  def maxAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(Int.MinValue)(max)
+  def minAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(Int.MaxValue)(min)
 
 }

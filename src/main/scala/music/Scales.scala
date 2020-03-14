@@ -34,4 +34,18 @@ object Scales {
     )
   }
 
+  def genScale(mode: Mode): List[Step] = {
+    // val pattern: Stream[Step] = List(ws, ws, hs, ws, ws, ws, hs).toStream #::: pattern
+    mode match {
+      case Major | Ionian => List(ws, ws, hs, ws, ws, ws, hs)
+      case Dorian => List(ws, hs, ws, ws, ws, hs, ws)
+      case Phrygian => List(hs, ws, ws, ws, hs, ws, ws)
+      case Lydian => List(ws, ws, ws, hs, ws, ws, hs)
+      case Mixolydian => List(ws, ws, hs, ws, ws, hs, ws)
+      case Minor | Aeolian => List(ws, hs, ws, ws, hs, ws, ws)
+      case Locrian => List(hs, ws, ws, hs, ws, ws, ws)
+    }
+
+  }
+
 }

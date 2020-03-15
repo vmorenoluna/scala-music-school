@@ -61,4 +61,12 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "graceNote" should "add a grace note to a note" in {
+    val note: Music[Pitch] = e(4)(qn)
+
+    graceNote(ws, note) should equal(
+      fs(4)(qn/8) :+: e(4)(7*qn/8)
+    )
+  }
+
 }

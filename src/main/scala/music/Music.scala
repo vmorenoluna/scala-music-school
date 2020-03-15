@@ -119,4 +119,9 @@ final object Music {
   def addDuration[A](d: Duration, notes: List[Duration => Music[A]]): Music[A] =
     line(notes.map(note => note(d)))
 
+  def graceNote(step: Step, n: Music[Pitch]): Music[Pitch] = n match {
+    case Prim(Note(d, p:Pitch)) => note(d/8, trans(step,p)) :+: note(7*d/8, p)
+    case _ => n
+  }
+
 }

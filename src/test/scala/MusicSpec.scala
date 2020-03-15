@@ -43,4 +43,13 @@ class MusicSpec extends UnitSpec {
     minAbsPitch(pitches) should equal(50)
   }
 
+  "times" should "repeat a music the specified amount of times" in {
+    val m: Music[Pitch] = c(4, qn) :+: d(4, qn) :+: e(4, qn)
+    val n: Int = 2
+
+    times(n, m) should equal(
+      (c(4, qn) :+: d(4, qn) :+: e(4, qn)) :+: ((c(4, qn) :+: d(4, qn) :+: e(4, qn)) :+: rest(0))
+    )
+  }
+
 }

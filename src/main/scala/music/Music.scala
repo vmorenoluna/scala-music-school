@@ -113,5 +113,7 @@ final object Music {
     case n => m :+: times(n - 1, m)
   }
 
+  def addDuration[A](d: Duration, notes: List[Duration => Music[A]]): Music[A] =
+    line(notes.map(note => note(d)))
 
 }

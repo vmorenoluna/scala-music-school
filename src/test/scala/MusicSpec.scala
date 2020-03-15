@@ -52,4 +52,13 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "addDuration" should "add a duration to a list of notes" in {
+    val notes: List[Duration => Music[Pitch]] = List(c(4), d(4), e(4))
+    val duration: Duration = qn
+
+    addDuration(duration, notes) should equal(
+      c(4)(qn) :+: d(4)(qn) :+: e(4)(qn) :+: rest(0)
+    )
+  }
+
 }

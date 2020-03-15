@@ -108,6 +108,9 @@ final object Music {
 
   def minAbsPitch(absPitches: List[AbsPitch]): AbsPitch = absPitches.foldLeft(Int.MaxValue)(min)
 
+  def fuse[A](ds: List[Duration], notes: List[Duration => Music[A]]): List[Music[A]] =
+    ds zip notes map { case (a,b) => b(a) }
+
   def times[A](n: Int, m: Music[A]): Music[A] = n match {
     case 0 => rest(0)
     case n => m :+: times(n - 1, m)

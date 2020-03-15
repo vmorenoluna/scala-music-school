@@ -1,6 +1,6 @@
 package map
 
-import music.{:+:, :=:, Modify, Music, Note, PitchClass, Prim, Rest}
+import music._
 import music.Types._
 import music.Music._
 
@@ -43,8 +43,5 @@ object Functions {
 
   def addPairPointwiseFoldLeft(pairs: List[(Int,Int)]): (Int,Int) =
     pairs.foldLeft((0, 0)) { case ((accA, accB), (a, b)) => (accA + a, accB + b) }
-
-  def fuse(ds: List[Duration], notes: List[Duration => Music[Pitch]]): List[Music[Pitch]] =
-    ds zip notes map { case (a,b) => b(a) }
 
 }

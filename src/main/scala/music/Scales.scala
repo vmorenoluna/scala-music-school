@@ -44,6 +44,7 @@ object Scales {
       case Mixolydian => List(ws, ws, hs, ws, ws, hs, ws)
       case Minor | Aeolian => List(ws, hs, ws, ws, hs, ws, ws)
       case Locrian => List(hs, ws, ws, hs, ws, ws, ws)
+      case CustomMode(_) => List.empty
     }
 
   }

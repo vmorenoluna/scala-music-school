@@ -5,22 +5,22 @@ import music._
 class MusicSpec extends UnitSpec {
 
   "line" should "create a sequential Music from a list of notes" in {
-    val notes: List[Music[Pitch]] = List(c(4,qn), d(4,qn), e(4,qn), fs(4,qn), gs(4,qn))
+    val notes: List[Music[Pitch]] = List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
 
     line(notes) should equal(
-      c(4,qn) :+: d(4,qn) :+: e(4,qn) :+: fs(4,qn) :+: gs(4,qn) :+: rest(0)
+      c(4)(qn) :+: d(4)(qn) :+: e(4)(qn) :+: fs(4)(qn) :+: gs(4)(qn) :+: rest(0)
     )
   }
 
   "chord" should "create a parallel Music from a list of notes" in {
-    val notes: List[Music[Pitch]] = List(c(4,qn), d(4,qn), e(4,qn), fs(4,qn), gs(4,qn))
+    val notes: List[Music[Pitch]] = List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
 
     chord(notes) should equal(
-        c(4,qn) :=:
-        d(4,qn) :=:
-        e(4,qn) :=:
-        fs(4,qn) :=:
-        gs(4,qn) :=:
+        c(4)(qn) :=:
+        d(4)(qn) :=:
+        e(4)(qn) :=:
+        fs(4)(qn) :=:
+        gs(4)(qn) :=:
         rest(0)
     )
   }
@@ -44,11 +44,11 @@ class MusicSpec extends UnitSpec {
   }
 
   "times" should "repeat a music the specified amount of times" in {
-    val m: Music[Pitch] = c(4, qn) :+: d(4, qn) :+: e(4, qn)
+    val m: Music[Pitch] = c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)
     val n: Int = 2
 
     times(n, m) should equal(
-      (c(4, qn) :+: d(4, qn) :+: e(4, qn)) :+: ((c(4, qn) :+: d(4, qn) :+: e(4, qn)) :+: rest(0))
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :+: ((c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :+: rest(0))
     )
   }
 

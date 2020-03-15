@@ -8,14 +8,14 @@ class ScalesSpec extends UnitSpec {
   "wholeToneScale (p)" should "return the correct whole tone scale" in {
     val root: Pitch = (C, 4)
 
-    wholeToneScale(root) should equal(List(c(4, qn), d(4, qn), e(4, qn), fs(4, qn), gs(4, qn)))
+    wholeToneScale(root) should equal(List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn)))
   }
 
   "chromaticScale (ap1,ap2)" should "return the correct chromatic scale from ap1 to ap2" in {
     val ap1: AbsPitch = absPitch((C, 4))
     val ap2: AbsPitch = absPitch((E, 4))
 
-    chromaticScale(ap1, ap2) should equal(List(c(4, qn), cs(4, qn), d(4, qn), ds(4, qn), e(4, qn)))
+    chromaticScale(ap1, ap2) should equal(List(c(4)(qn), cs(4)(qn), d(4)(qn), ds(4)(qn), e(4)(qn)))
   }
 
   "chromaticScale (p1,p2)" should "return the correct ascending chromatic scale from p1 to p2" in {
@@ -23,7 +23,7 @@ class ScalesSpec extends UnitSpec {
     val p2: Pitch = (E, 4)
 
     chromaticScale(p1, p2) should equal(
-      c(4, qn) :+: cs(4, qn) :+: d(4, qn) :+: ds(4, qn) :+: e(4, qn) :+: rest(0)
+      c(4)(qn) :+: cs(4)(qn) :+: d(4)(qn) :+: ds(4)(qn) :+: e(4)(qn) :+: rest(0)
     )
     // c :+: cs :+: d = d.:+:(c :+: cs) = :+:(c :+: cs, d) = :+:(cs.:+:(c), d) = :+:(:+:(c, cs), d)
   }
@@ -33,7 +33,7 @@ class ScalesSpec extends UnitSpec {
     val pattern: List[Step] = List(ws, ws, hs, ws, ws, ws)
 
     makeScale(pitch, pattern) should equal(
-      c(4, qn) :+: d(4, qn) :+: e(4, qn) :+: f(4, qn) :+: g(4, qn) :+: music.Music.a(4, qn) :+: b(4, qn) :+: rest(0)
+      c(4)(qn) :+: d(4)(qn) :+: e(4)(qn) :+: f(4)(qn) :+: g(4)(qn) :+: music.Music.a(4)(qn) :+: b(4)(qn) :+: rest(0)
     )
   }
 

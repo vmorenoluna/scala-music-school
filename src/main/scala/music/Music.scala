@@ -94,11 +94,8 @@ final object Music {
   def denr(): Music[Pitch] = rest(den)
   def dsnr(): Music[Pitch] = rest(dsn)
   def dtnr(): Music[Pitch] = rest(dtn)
-
   def ddhnr(): Music[Pitch] = rest(ddhn)
-
   def ddqnr(): Music[Pitch] = rest(ddqn)
-
   def ddenr(): Music[Pitch] = rest(dden)
 
   def line[A](notes: List[Music[A]]): Music[A] = notes.foldRight(rest[A](0))(_ :+: _)

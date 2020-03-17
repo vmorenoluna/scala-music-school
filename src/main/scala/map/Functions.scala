@@ -44,4 +44,10 @@ object Functions {
   def addPairPointwiseFoldLeft(pairs: List[(Int,Int)]): (Int,Int) =
     pairs.foldLeft((0, 0)) { case ((accA, accB), (a, b)) => (accA + a, accB + b) }
 
+  def prefixes[A](list: List[A]): List[List[A]] = list match {
+    case Nil => Nil
+    case ::(h, t) => List(h) :: prefixes(t).map(h :: _)
+  }
+
+
 }

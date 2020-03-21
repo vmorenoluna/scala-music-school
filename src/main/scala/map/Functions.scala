@@ -49,5 +49,12 @@ object Functions {
     case ::(h, t) => List(h) :: prefixes(t).map(h :: _)
   }
 
+  def twice[A](f: A => A)(a: A): A =
+    f(f(a))
+
+  def power[A](f: A => A, n: Int)(a: A): A = n match {
+    case 0 => a
+    case i => power(f, i-1)(f(a))
+  }
 
 }

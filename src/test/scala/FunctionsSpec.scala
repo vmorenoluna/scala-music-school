@@ -10,4 +10,16 @@ class FunctionsSpec extends UnitSpec {
     )
   }
 
+  "twice" should "apply a function f twice to its argument" in {
+    twice[Int](n => n+1)(2) should equal(4)
+    twice[Int](twice[Int](n => n+1))(2) should equal(6)
+    twice[Int](twice[Int](twice[Int](n => n+1)))(2) should equal(10)
+  }
+
+  "power" should "apply a function f n times to its argument" in {
+    power[Int](n => n+1, 2)(2) should equal(4)
+    power[Int](n => n+1, 4)(2) should equal(6)
+    power[Int](n => n+1, 8)(2) should equal(10)
+  }
+
 }

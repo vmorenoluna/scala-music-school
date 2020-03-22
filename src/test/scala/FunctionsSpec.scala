@@ -22,4 +22,14 @@ class FunctionsSpec extends UnitSpec {
     power[Int](n => n+1, 8)(2) should equal(10)
   }
 
+  "remainder(a,b)" should "return the remainder of a/b" in {
+    remainder(1)(3) should equal(1)
+    remainder(9)(4) should equal(1)
+  }
+
+  "remainderWithFix(a)(b)" should "return the remainder of a/b" in {
+    remainderWithFix(1)(3) should equal(1)
+    remainderWithFix(9)(4) should equal(1)
+  }
+
 }

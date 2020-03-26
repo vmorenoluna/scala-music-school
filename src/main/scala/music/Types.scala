@@ -12,8 +12,8 @@ final object Types {
   type PhraseAttribute = Any     // TODO
   type Step = Int
 
-  final implicit class Fraction(private val self: Long) extends AnyVal {
-    def /(other: Long) = Rational(self, other)
+  final implicit class Fraction(private val self: Int) extends AnyVal {
+    def div(other: Int) = Rational(self, other)
   }
 
   def absPitch(p: Pitch): AbsPitch = 12 * (p._2) + pcToInt(p._1)

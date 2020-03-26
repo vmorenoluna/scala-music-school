@@ -16,7 +16,7 @@ class MusicSpec extends UnitSpec {
     val notes: List[Music[Pitch]] = List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
 
     chord(notes) should equal(
-        c(4)(qn) :=:
+      c(4)(qn) :=:
         d(4)(qn) :=:
         e(4)(qn) :=:
         fs(4)(qn) :=:
@@ -26,9 +26,9 @@ class MusicSpec extends UnitSpec {
   }
 
   "maxPitch" should "return the highest pitch from a list of pitches" in {
-    val pitches: List[Pitch] = List((C,4), (D,2), (E,7), (F,5))
+    val pitches: List[Pitch] = List((C, 4), (D, 2), (E, 7), (F, 5))
 
-    maxPitch(pitches) should equal((E,7))
+    maxPitch(pitches) should equal((E, 7))
   }
 
   "maxAbsPitch" should "return the highest absolute pitch from a list of absolute pitches" in {
@@ -65,7 +65,19 @@ class MusicSpec extends UnitSpec {
     val note: Music[Pitch] = e(4)(qn)
 
     graceNote(ws, note) should equal(
-      fs(4)(qn/8) :+: e(4)(7*qn/8)
+      fs(4)(qn / 8) :+: e(4)(7 * qn / 8)
+    )
+  }
+
+  "apPairsMusic" should "create a music from a list of absolute pitches pairs" in {
+    lazy val apsList: LazyList[(AbsPitch, AbsPitch)] = (50, 50) #:: apsList.map(ps => (ps._1 + 1, ps._2 + 1))
+    val apPairsList: List[(AbsPitch, AbsPitch)] = apsList.take(3).toList
+
+    apPairsMusic(apPairsList) should equal(
+        (d(4)(qn) :=: d(4)(qn)) :+:
+        (ds(4)(en) :=: ds(4)(en)) :+:
+        (e(4)(qn) :=: e(4)(qn)) :+:
+        rest(0)
     )
   }
 

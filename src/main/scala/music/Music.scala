@@ -1,7 +1,7 @@
 package music
 
 import music.Types._
-import scala.math.{max, min}
+import scala.math.{abs, max, min}
 
 sealed trait Primitive[A]
 final case class Note[A](duration: Duration, features: A) extends Primitive[A]
@@ -64,21 +64,21 @@ final object Music {
 
   def bn: Duration = 2
   def wn: Duration = 1
-  def hn: Duration = 1/2
-  def qn: Duration = 1/4
-  def en: Duration = 1/8
-  def sn: Duration = 1/16
-  def tn: Duration = 1/32
-  def sfn: Duration = 1/64
-  def dwn: Duration = 3/2
-  def dhn: Duration = 3/4
-  def dqn: Duration = 3/8
-  def den: Duration = 3/16
-  def dsn: Duration = 3/32
-  def dtn: Duration = 3/64
-  def ddhn: Duration = 7/8
-  def ddqn: Duration = 7/16
-  def dden: Duration = 7/32
+  def hn: Duration = 1 div 2
+  def qn: Duration = 1 div 4
+  def en: Duration = 1 div 8
+  def sn: Duration = 1 div 16
+  def tn: Duration = 1 div 32
+  def sfn: Duration = 1 div 64
+  def dwn: Duration = 3 div 2
+  def dhn: Duration = 3 div 4
+  def dqn: Duration = 3 div 8
+  def den: Duration = 3 div 16
+  def dsn: Duration = 3 div 32
+  def dtn: Duration = 3 div 64
+  def ddhn: Duration = 7 div 8
+  def ddqn: Duration = 7 div 16
+  def dden: Duration = 7 div 32
 
   def bnr: Music[Pitch] = rest(bn)
   def wnr: Music[Pitch] = rest(wn)
@@ -120,8 +120,25 @@ final object Music {
     line(notes.map(note => note(d)))
 
   def graceNote(step: Step, n: Music[Pitch]): Music[Pitch] = n match {
-    case Prim(Note(d, p:Pitch)) => note(d/8, trans(step,p)) :+: note(7*d/8, p)
+    case Prim(Note(d, p:Pitch)) => note(d / 8, trans(step,p)) :+: note(7*d / 8, p)
     case _ => n
   }
+
+  def apPairs(aps1: List[AbsPitch], aps2: List[AbsPitch]): List[(AbsPitch, AbsPitch)] =
+    for {
+      ap1 <- aps1
+      ap2 <- aps2
+      diff = abs(ap1 - ap2)
+      if (diff > 2 && diff < 8)
+    } yield (ap1, ap2)
+
+  def apPairsMusic(pairs: List[(AbsPitch, AbsPitch)]): Music[Pitch] =
+    line(
+      for {
+        pair <- pairs
+        duration = if (pair._1 % 2 == 0) qn else en
+        chord = note(duration, pitch(pair._1)) :=: note(duration, pitch(pair._2))
+      } yield chord
+    )
 
 }

@@ -73,4 +73,8 @@ object Functions {
   val remainderWithFix =
     fix[Int => Int => Int](remainder => x => y => if (x < y) x else remainder(x-y)(y))
 
+  def composition[A,B,C](f: B => C, g: A => B, as: List[A]): List[C]  =
+    as.map((f compose g)(_))
+
+
 }

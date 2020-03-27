@@ -81,4 +81,13 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "offset" should "prepend a rest to the music" in {
+    val duration = wn
+    val music = c(4)(qn)
+
+    offset(duration, music) should equal(
+      rest[Pitch](duration) :+: music
+    )
+  }
+
 }

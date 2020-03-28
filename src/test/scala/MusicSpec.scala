@@ -106,4 +106,28 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "retro" should "reverse a line" in {
+    val music = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
+
+    retro(music) should equal(
+      c(5)(qn) :+: g(4)(qn) :+: f(5)(qn) :+: b(4)(qn) :+: rest(0)
+    )
+  }
+
+  "retroInvert" should "reverse and invert a line" in {
+    val music = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
+
+    retroInvert(music) should equal(
+      as(4)(qn) :+: ds(5)(qn) :+: f(4)(qn) :+: b(4)(qn) :+: rest(0)
+    )
+  }
+
+  "invertRetro" should "invert and reverse a line" in {
+    val music = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
+
+    invertRetro(music) should equal(
+      c(5)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: cs(5)(qn) :+: rest(0)
+    )
+  }
+
 }

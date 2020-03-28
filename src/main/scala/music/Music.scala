@@ -236,4 +236,13 @@ final object Music {
     )
   }
 
+  def retro(m: Music[Pitch]): Music[Pitch] =
+    line (lineToList(m).reverse)
+
+  def retroInvert(m: Music[Pitch]): Music[Pitch] =
+    retro (invert(m))
+
+  def invertRetro(m: Music[Pitch]): Music[Pitch] =
+    invert (retro(m))
+
 }

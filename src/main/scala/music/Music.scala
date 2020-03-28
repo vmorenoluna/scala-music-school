@@ -219,4 +219,10 @@ final object Music {
   def forever[A](m: Music[A]): Music[A] =
     m :+: forever(m)
 
+  def lineToList[A](m: Music[A]): List[Music[A]] = m match {
+    case Prim(Rest(d)) if d == 0 => List.empty
+    case :+:(n, ns) => n :: lineToList(ns)
+    case _ => List.empty  // TODO music not created with line, return error
+  }
+
 }

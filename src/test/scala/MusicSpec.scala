@@ -12,6 +12,14 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "lineToList" should "create a list of notes from a sequential Music made with line" in {
+    val music = c(4)(qn) :+: d(4)(qn) :+: e(4)(qn) :+: fs(4)(qn) :+: gs(4)(qn) :+: rest(0)
+
+    lineToList(music) should equal(
+          List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
+    )
+  }
+
   "chord" should "create a parallel Music from a list of notes" in {
     val notes: List[Music[Pitch]] = List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
 

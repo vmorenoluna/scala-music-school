@@ -221,8 +221,19 @@ final object Music {
 
   def lineToList[A](m: Music[A]): List[Music[A]] = m match {
     case Prim(Rest(d)) if d == 0 => List.empty
+    case Prim(Note(d,f)) => List(Prim(Note(d,f)))
     case :+:(n, ns) => n :: lineToList(ns)
     case _ => List.empty  // TODO music not created with line, return error
+  }
+
+  def invert(m: Music[Pitch]): Music[Pitch] = {
+    val l @ (Prim(Note(_, r)) :: _) = lineToList(m)
+    line (
+      l.map {
+        case Prim(Note(d, p)) => note(d, pitch(2*absPitch(r) - absPitch(p)))
+        case Prim(Rest(d)) => rest(d)
+      }
+    )
   }
 
 }

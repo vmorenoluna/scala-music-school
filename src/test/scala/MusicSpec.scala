@@ -98,4 +98,12 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "invert" should "invert a line" in {
+    val music = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
+
+    invert(music) should equal(
+      b(4)(qn) :+: f(4)(qn) :+: ds(5)(qn) :+: as(4)(qn) :+: rest(0)
+    )
+  }
+
 }

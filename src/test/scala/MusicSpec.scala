@@ -170,4 +170,13 @@ class MusicSpec extends UnitSpec {
     properRow(properMusic) should equal(false)
   }
 
+  "palin" should "detect a palindrome melody ignoring rests and durations" in {
+    val music =
+      b(4)(qn) :+: c(5)(qn) :+: cs(4)(en) :+: df(5)(qn) :+:
+        rest[Pitch](qn) :+: f(2)(qn) :+: rest[Pitch](qn) :+:
+        df(5)(qn) :+: cs(4)(qn) :+: c(5)(qn) :+: b(4)(wn)
+
+    palin(music) should equal(true)
+  }
+
 }

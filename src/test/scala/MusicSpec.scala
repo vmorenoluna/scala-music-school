@@ -179,4 +179,12 @@ class MusicSpec extends UnitSpec {
     palin(music) should equal(true)
   }
 
+  "retroPitches" should "reverse the pitches in a line while maintaining the durations order" in {
+    val music = b(4)(en) :+: c(5)(qn) :+: cs(4)(hn) :+: df(5)(wn)
+
+    retroPitches(music) should equal(
+      df(5)(en) :+: cs(4)(qn) :+: c(5)(hn) :+: b(4)(wn) :+: rest(0)
+    )
+  }
+
 }

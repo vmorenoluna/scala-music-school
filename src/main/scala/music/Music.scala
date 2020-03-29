@@ -264,4 +264,17 @@ final object Music {
     ps equals ps.reverse
   }
 
+  def retroPitches(m: Music[(PitchClass, Octave)]): Music[Pitch] = {
+    val music = lineToList(m)
+    val musicZipped: List[(Music[Pitch], Music[Pitch])] = music.zip(music.reverse)
+
+    def go(list: List[(Music[Pitch],Music[Pitch])]): Music[Pitch] =
+    list match {
+      case Nil => rest(0)
+      case ::( (Prim(Note(d,_)), Prim(Note(_,p))), tail) => note(d,p) :+: go(tail)
+    }
+
+    go(musicZipped)
+  }
+
 }

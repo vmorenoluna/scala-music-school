@@ -16,7 +16,7 @@ class MusicSpec extends UnitSpec {
     val music = c(4)(qn) :+: d(4)(qn) :+: e(4)(qn) :+: fs(4)(qn) :+: gs(4)(qn) :+: rest(0)
 
     lineToList(music) should equal(
-          List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
+      List(c(4)(qn), d(4)(qn), e(4)(qn), fs(4)(qn), gs(4)(qn))
     )
   }
 
@@ -82,7 +82,7 @@ class MusicSpec extends UnitSpec {
     val apPairsList: List[(AbsPitch, AbsPitch)] = apsList.take(3).toList
 
     apPairsMusic(apPairsList) should equal(
-        (d(4)(qn) :=: d(4)(qn)) :+:
+      (d(4)(qn) :=: d(4)(qn)) :+:
         (ds(4)(en) :=: ds(4)(en)) :+:
         (e(4)(qn) :=: e(4)(qn)) :+:
         rest(0)
@@ -128,6 +128,46 @@ class MusicSpec extends UnitSpec {
     invertRetro(music) should equal(
       c(5)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: cs(5)(qn) :+: rest(0)
     )
+  }
+
+  "properRow" should "detect if a music have exactly 12 notes" in {
+    val notProperMusic = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
+
+    properRow(notProperMusic) should equal(false)
+
+    val properMusic =
+        b(4)(qn) :+: c(5)(qn) :+: cs(4)(qn) :+: d(5)(qn) :+:
+        ds(5)(qn) :+: e(4)(qn) :+: f(5)(qn) :+: fs(5)(qn) :+:
+        g(4)(qn) :+: gs(5)(qn) :+: gss(5)(qn) :+: as(4)(qn)
+
+    properRow(properMusic) should equal(true)
+  }
+
+  "properRow" should "check each pitch class is used only once, regardless of the octave" in {
+    val properMusic =
+      b(4)(qn) :+: c(5)(qn) :+: c(4)(qn) :+: d(5)(qn) :+:
+        ds(5)(qn) :+: e(4)(qn) :+: f(5)(qn) :+: fs(5)(qn) :+:
+        g(4)(qn) :+: gs(5)(qn) :+: gss(7)(qn) :+: as(4)(qn)
+
+    properRow(properMusic) should equal(false)
+  }
+
+  "properRow" should "ignore rests" in {
+    val properMusic =
+      b(4)(qn) :+: c(5)(qn) :+: cs(4)(qn) :+: d(5)(qn) :+: rest[Pitch](qn) :+:
+        ds(5)(qn) :+: e(4)(qn) :+: f(5)(qn) :+: fs(5)(qn) :+: rest[Pitch](qn) :+:
+        g(4)(qn) :+: gs(5)(qn) :+: gss(7)(qn) :+: as(4)(qn) :+: rest(0)
+
+    properRow(properMusic) should equal(true)
+  }
+
+  "properRow" should "not consider as unique enharmonically equivalent pitch classes" in {
+    val properMusic =
+      b(4)(qn) :+: c(5)(qn) :+: cs(4)(qn) :+: df(5)(qn) :+:
+        ds(5)(qn) :+: e(4)(qn) :+: f(5)(qn) :+: fs(5)(qn) :+:
+        g(4)(qn) :+: gs(5)(qn) :+: gss(7)(qn) :+: as(4)(qn)
+
+    properRow(properMusic) should equal(false)
   }
 
 }

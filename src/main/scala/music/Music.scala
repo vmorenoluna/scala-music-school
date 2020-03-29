@@ -245,4 +245,19 @@ final object Music {
   def invertRetro(m: Music[Pitch]): Music[Pitch] =
     invert (retro(m))
 
+  def properRow(m: Music[Pitch]): Boolean = {
+    pitches(m)
+      .groupBy(_._1)
+      .keys
+      .size == 12
+  }
+
+  private def pitches(m: Music[Pitch]): Set[Pitch] = m match {
+    case Prim(Rest(_)) => Set.empty
+    case Prim(Note(_,f)) => Set(pitch(absPitch(f)))
+    case :+:(Prim(Rest(_)), ns) => pitches(ns)
+    case :+:(Prim(Note(_,f)), ns) => pitches(ns) + pitch(absPitch(f))
+    case _ => Set.empty  // TODO music not created with line, return error
+  }
+
 }

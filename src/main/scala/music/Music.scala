@@ -239,6 +239,18 @@ final object Music {
   def retro(m: Music[Pitch]): Music[Pitch] =
     line (lineToList(m).reverse)
 
+  def retro[A](m: Music[A]): Music[A] = m match {
+    case n: Prim[A] => n
+    case Modify(control, music) => Modify(control, retro(music))
+    case :+:(m1, m2) => retro(m2) :+: retro(m1)
+    case :=:(m1, m2) => {
+      val d1 = dur(m1)
+      val d2 = dur(m2)
+      if (d1 > d2) retro(m1) :=: (rest(d1-d2) :+: retro(m2))
+      else (rest(d2-d1) :+: retro(m1)) :=: retro(m2)
+    }
+  }
+
   def retroInvert(m: Music[Pitch]): Music[Pitch] =
     retro (invert(m))
 

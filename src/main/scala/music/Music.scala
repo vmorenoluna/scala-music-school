@@ -277,4 +277,13 @@ final object Music {
     go(musicZipped)
   }
 
+  def dur[A](m: Music[A]): Duration = m match {
+    case Prim(Note(d, _)) => d
+       case Prim(Rest(d)) => d
+    case Modify(Tempo(r), m) => dur(m) / r
+      case Modify(_, m) => dur(m)
+    case :+:(m1, m2) => dur(m1) + dur(m2)
+    case :=:(m1, m2) => dur(m1) max dur(m2)
+  }
+
 }

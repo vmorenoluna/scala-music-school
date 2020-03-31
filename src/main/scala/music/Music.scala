@@ -312,7 +312,7 @@ final object Music {
     case Modify(c, m) => Modify(c, cut(d, m))
     case :+:(m1, m2) => {
       val m3 = cut[A](d, m1)
-      val m4 = cut[A](d - dur(m3), m4)
+      val m4 = cut[A](d - dur(m3), m2)
       m3 :+: m4
     }
     case :=:(m1, m2) => cut(d, m1) :=: cut(d, m2)

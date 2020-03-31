@@ -4,15 +4,21 @@ import music.Types._
 import scala.math.{abs, max, min}
 
 sealed trait Primitive[A]
+
 final case class Note[A](duration: Duration, features: A) extends Primitive[A]
+
 final case class Rest[A](duration: Duration) extends Primitive[A]
 
 sealed trait Music[A] {
   def :+:(that: Music[A]): Music[A] = new :+:(that, this)
+
   def :=:(that: Music[A]): Music[A] = new :=:(that, this)
 }
+
 final case class Prim[A](primitive: Primitive[A]) extends Music[A]
+
 final case class Modify[A](control: Control, music: Music[A]) extends Music[A]
+
 final case class :+:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO sequential composition
 final case class :=:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO parallel composition
 
@@ -221,23 +227,23 @@ final object Music {
 
   def lineToList[A](m: Music[A]): List[Music[A]] = m match {
     case Prim(Rest(d)) if d == 0 => List.empty
-    case Prim(Note(d,f)) => List(Prim(Note(d,f)))
+    case Prim(Note(d, f)) => List(Prim(Note(d, f)))
     case :+:(n, ns) => n :: lineToList(ns)
-    case _ => List.empty  // TODO music not created with line, return error
+    case _ => List.empty // TODO music not created with line, return error
   }
 
   def invert(m: Music[Pitch]): Music[Pitch] = {
-    val l @ (Prim(Note(_, r)) :: _) = lineToList(m)
-    line (
+    val l@(Prim(Note(_, r)) :: _) = lineToList(m)
+    line(
       l.map {
-        case Prim(Note(d, p)) => note(d, pitch(2*absPitch(r) - absPitch(p)))
+        case Prim(Note(d, p)) => note(d, pitch(2 * absPitch(r) - absPitch(p)))
         case Prim(Rest(d)) => rest(d)
       }
     )
   }
 
   def retro(m: Music[Pitch]): Music[Pitch] =
-    line (lineToList(m).reverse)
+    line(lineToList(m).reverse)
 
   def retro[A](m: Music[A]): Music[A] = m match {
     case n: Prim[A] => n
@@ -246,16 +252,16 @@ final object Music {
     case :=:(m1, m2) => {
       val d1 = dur(m1)
       val d2 = dur(m2)
-      if (d1 > d2) retro(m1) :=: (rest(d1-d2) :+: retro(m2))
-      else (rest(d2-d1) :+: retro(m1)) :=: retro(m2)
+      if (d1 > d2) retro(m1) :=: (rest(d1 - d2) :+: retro(m2))
+      else (rest(d2 - d1) :+: retro(m1)) :=: retro(m2)
     }
   }
 
   def retroInvert(m: Music[Pitch]): Music[Pitch] =
-    retro (invert(m))
+    retro(invert(m))
 
   def invertRetro(m: Music[Pitch]): Music[Pitch] =
-    invert (retro(m))
+    invert(retro(m))
 
   def properRow(m: Music[Pitch]): Boolean =
     pitches(m, p => pitch(absPitch(p)))
@@ -265,10 +271,10 @@ final object Music {
 
   private def pitches(m: Music[Pitch], f: Pitch => Pitch): List[Pitch] = m match {
     case Prim(Rest(_)) => List.empty
-    case Prim(Note(_,p)) => List(f(p))
+    case Prim(Note(_, p)) => List(f(p))
     case :+:(Prim(Rest(_)), ns) => pitches(ns, f)
-    case :+:(Prim(Note(_,p)), ns) => f(p) :: pitches(ns, f)
-    case _ => List.empty  // TODO music not created with line, return error
+    case :+:(Prim(Note(_, p)), ns) => f(p) :: pitches(ns, f)
+    case _ => List.empty // TODO music not created with line, return error
   }
 
   def palin(m: Music[Pitch]): Boolean = {
@@ -280,22 +286,36 @@ final object Music {
     val music = lineToList(m)
     val musicZipped: List[(Music[Pitch], Music[Pitch])] = music.zip(music.reverse)
 
-    def go(list: List[(Music[Pitch],Music[Pitch])]): Music[Pitch] =
-    list match {
-      case Nil => rest(0)
-      case ::( (Prim(Note(d,_)), Prim(Note(_,p))), tail) => note(d,p) :+: go(tail)
-    }
+    def go(list: List[(Music[Pitch], Music[Pitch])]): Music[Pitch] =
+      list match {
+        case Nil => rest(0)
+        case ::((Prim(Note(d, _)), Prim(Note(_, p))), tail) => note(d, p) :+: go(tail)
+      }
 
     go(musicZipped)
   }
 
   def dur[A](m: Music[A]): Duration = m match {
     case Prim(Note(d, _)) => d
-       case Prim(Rest(d)) => d
+    case Prim(Rest(d)) => d
     case Modify(Tempo(r), m) => dur(m) / r
-      case Modify(_, m) => dur(m)
+    case Modify(_, m) => dur(m)
     case :+:(m1, m2) => dur(m1) + dur(m2)
     case :=:(m1, m2) => dur(m1) max dur(m2)
+  }
+
+  def cut[A](d:Duration, m: Music[A]): Music[A] = m match {
+    case _ if d <= 0 => rest(0)
+    case Prim(Note(oldD, p)) => note(oldD min d, p)
+    case Prim(Rest(oldD)) => rest(oldD min d)
+    case Modify(Tempo(r), m) => tempo(r, cut(d * r, m))
+    case Modify(c, m) => Modify(c, cut(d, m))
+    case :+:(m1, m2) => {
+      val m3 = cut[A](d, m1)
+      val m4 = cut[A](d - dur(m3), m4)
+      m3 :+: m4
+    }
+    case :=:(m1, m2) => cut(d, m1) :=: cut(d, m2)
   }
 
 }

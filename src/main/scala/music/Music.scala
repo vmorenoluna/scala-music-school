@@ -318,4 +318,18 @@ final object Music {
     case :=:(m1, m2) => cut(d, m1) :=: cut(d, m2)
   }
 
+  def remove[A](d:Duration, m: Music[A]): Music[A] = m match {
+    case _ if d <= 0 => m
+    case Prim(Note(oldD, p)) => note((oldD-d) max 0, p)
+    case Prim(Rest(oldD)) => rest((oldD-d) max 0)
+    case Modify(Tempo(r), m) => tempo(r, remove(d * r, m))
+    case Modify(c, m) => Modify(c, remove(d, m))
+    case :+:(m1, m2) => {
+      val m3 = remove[A](d, m1)
+      val m4 = remove[A](d - dur(m1), m2)
+      m3 :+: m4
+    }
+    case :=:(m1, m2) => remove(d, m1) :=: remove(d, m2)
+  }
+
 }

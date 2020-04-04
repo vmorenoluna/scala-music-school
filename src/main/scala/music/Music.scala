@@ -15,7 +15,9 @@ final case class Rest[A](duration: Duration) extends Primitive[A]
 
 sealed trait Music[A] {
   def :+:(that: Music[A]): Music[A] = new :+:(that, this)
+
   def :=:(that: Music[A]): Music[A] = new :=:(that, this)
+
   def /=:(that: Music[A]): Music[A] = Music.cutL(Music.durL(that), this) :=: Music.cutL(Music.durL(this), that)
 }
 
@@ -400,8 +402,8 @@ final object Music {
       if (sDur >= tDur)
         note(tDur, p)
       else
-        note(sDur, p) :+: trill(-i, sDur, note(tDur-sDur, trans(i, p)))
-    case (i, d, Modify(Tempo(r), m)) => tempo(r, trill(i, d*r, m))
+        note(sDur, p) :+: trill(-i, sDur, note(tDur - sDur, trans(i, p)))
+    case (i, d, Modify(Tempo(r), m)) => tempo(r, trill(i, d * r, m))
     case (i, d, Modify(c, m)) => Modify(c, trill(i, d, m))
     case _ => rest(zero) // TODO input must be a single note
   }
@@ -414,5 +416,11 @@ final object Music {
 
   def trillnOtherNote(interval: Int, nTimes: Int, m: Music[Pitch]): Music[Pitch] =
     trilln(-interval, nTimes, transpose(interval, m))
+
+  def roll(d: Duration, m: Music[Pitch]): Music[Pitch] =
+    trill(0, d, m)
+
+  def rolln(nTimes: Int, m: Music[Pitch]): Music[Pitch] =
+    trilln(0, nTimes, m)
 
 }

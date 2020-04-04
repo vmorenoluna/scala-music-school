@@ -340,6 +340,27 @@ final object Music {
     case :=:(m1, m2) => cut(d, m1) :=: cut(d, m2)
   }
 
+  private def minL(ld: LazyDur, d: Duration): Duration = (ld, d) match {
+    case (LazyNil, _) => zero
+    case (LazyList(d1), d2) => d1 min d2
+    case (d1 #:: ds, d2) => if (d1 < d2) minL(ds, d2) else d2
+  }
+
+  def cutL[A](ld: LazyDur, m: Music[A]): Music[A] = (ld, m) match {
+    case (LazyNil, _) => rest(zero)
+    case (d #:: ds, m) if (d <= zero) => cutL(ds, m)
+    case (ld, Prim(Note(oldD, p))) => note(minL(ld, oldD), p)
+    case (ld, Prim(Rest(oldD))) => rest(minL(ld, oldD))
+    case (ld, Modify(Tempo(r), m)) => tempo(r, cutL(ld.map(_ * r), m))
+    case (ld, Modify(c, m)) => Modify(c, cutL(ld, m))
+    case (ld, :+:(m1, m2)) => {
+      val m3 = cutL[A](ld, m1)
+      val m4 = cutL[A](ld.map(d => d - dur(m3)), m2)
+      m3 :+: m4
+    }
+    case (ld, :=:(m1, m2)) => cutL(ld, m1) :=: cutL(ld, m2)
+  }
+
   def remove[A](d:Duration, m: Music[A]): Music[A] = m match {
     case _ if d <= 0 => m
     case Prim(Note(oldD, p)) => note((oldD-d) max 0, p)

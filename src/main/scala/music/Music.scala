@@ -14,8 +14,8 @@ final case class Rest[A](duration: Duration) extends Primitive[A]
 
 sealed trait Music[A] {
   def :+:(that: Music[A]): Music[A] = new :+:(that, this)
-
   def :=:(that: Music[A]): Music[A] = new :=:(that, this)
+  def /=:(that: Music[A]): Music[A] = Music.cutL(Music.durL(that), this) :=: Music.cutL(Music.durL(this), that)
 }
 
 final case class Prim[A](primitive: Primitive[A]) extends Music[A]
@@ -246,8 +246,8 @@ final object Music {
     )
   }
 
-//  def retro(m: Music[Pitch]): Music[Pitch] =
-//    line(lineToList(m).reverse)
+  //  def retro(m: Music[Pitch]): Music[Pitch] =
+  //    line(lineToList(m).reverse)
 
   def retro[A](m: Music[A]): Music[A] = m match {
     case n: Prim[A] => n
@@ -326,7 +326,7 @@ final object Music {
     case :=:(m1, m2) => mergeLD(durL(m1), durL(m2))
   }
 
-  def cut[A](d:Duration, m: Music[A]): Music[A] = m match {
+  def cut[A](d: Duration, m: Music[A]): Music[A] = m match {
     case _ if d <= 0 => rest(0)
     case Prim(Note(oldD, p)) => note(oldD min d, p)
     case Prim(Rest(oldD)) => rest(oldD min d)
@@ -361,10 +361,10 @@ final object Music {
     case (ld, :=:(m1, m2)) => cutL(ld, m1) :=: cutL(ld, m2)
   }
 
-  def remove[A](d:Duration, m: Music[A]): Music[A] = m match {
+  def remove[A](d: Duration, m: Music[A]): Music[A] = m match {
     case _ if d <= 0 => m
-    case Prim(Note(oldD, p)) => note((oldD-d) max 0, p)
-    case Prim(Rest(oldD)) => rest((oldD-d) max 0)
+    case Prim(Note(oldD, p)) => note((oldD - d) max 0, p)
+    case Prim(Rest(oldD)) => rest((oldD - d) max 0)
     case Modify(Tempo(r), m) => tempo(r, remove(d * r, m))
     case Modify(c, m) => Modify(c, remove(d, m))
     case :+:(m1, m2) => {

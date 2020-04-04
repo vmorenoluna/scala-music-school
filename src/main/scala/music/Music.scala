@@ -1,6 +1,9 @@
 package music
 
 import music.Types._
+import spire.math.Rational.zero
+import scala.collection.immutable.LazyList.#::
+
 import scala.math.{abs, max, min}
 
 sealed trait Primitive[A]
@@ -238,12 +241,13 @@ final object Music {
       l.map {
         case Prim(Note(d, p)) => note(d, pitch(2 * absPitch(r) - absPitch(p)))
         case Prim(Rest(d)) => rest(d)
+        case _ => rest(0) // TODO
       }
     )
   }
 
-  def retro(m: Music[Pitch]): Music[Pitch] =
-    line(lineToList(m).reverse)
+//  def retro(m: Music[Pitch]): Music[Pitch] =
+//    line(lineToList(m).reverse)
 
   def retro[A](m: Music[A]): Music[A] = m match {
     case n: Prim[A] => n
@@ -252,8 +256,8 @@ final object Music {
     case :=:(m1, m2) => {
       val d1 = dur(m1)
       val d2 = dur(m2)
-      if (d1 > d2) retro(m1) :=: (rest(d1 - d2) :+: retro(m2))
-      else (rest(d2 - d1) :+: retro(m1)) :=: retro(m2)
+      if (d1 > d2) retro(m1) :=: (rest[A](d1 - d2) :+: retro(m2))
+      else (rest[A](d2 - d1) :+: retro(m1)) :=: retro(m2)
     }
   }
 
@@ -290,6 +294,7 @@ final object Music {
       list match {
         case Nil => rest(0)
         case ::((Prim(Note(d, _)), Prim(Note(_, p))), tail) => note(d, p) :+: go(tail)
+        case _ => rest(0) // TODO
       }
 
     go(musicZipped)
@@ -302,6 +307,23 @@ final object Music {
     case Modify(_, m) => dur(m)
     case :+:(m1, m2) => dur(m1) + dur(m2)
     case :=:(m1, m2) => dur(m1) max dur(m2)
+  }
+
+  private def mergeLD(ld1: LazyDur, ld2: LazyDur): LazyDur = (ld1, ld2) match {
+    case (LazyNil, ld) => ld
+    case (ld, LazyNil) => ld
+    case (d1 #:: ds1, d2 #:: ds2) => if (d1 < d2) d1 +: mergeLD(ds1, ld2) else d2 +: mergeLD(ld1, ds2)
+  }
+
+  def durL[A](m: Music[A]): LazyDur = m match {
+    case Prim(_) => LazyList(dur(m))
+    case Modify(Tempo(r), m) => durL(m).map(_ / r)
+    case Modify(_, m) => durL(m)
+    case :+:(m1, m2) => {
+      val d1 = durL(m1)
+      d1 ++ durL(m2).map(_ + d1.last)
+    }
+    case :=:(m1, m2) => mergeLD(durL(m1), durL(m2))
   }
 
   def cut[A](d:Duration, m: Music[A]): Music[A] = m match {
@@ -336,17 +358,17 @@ final object Music {
     case Prim(p) => Prim(p)
     case Modify(c, m) => Modify(c, removeZeros(m))
     case :=:(m1, m2) => (removeZeros(m1), removeZeros(m2)) match {
-      case (Prim(Note(0, _)), m) => m
-      case (Prim(Rest(0)), m) => m
-      case (m, Prim(Note(0, _))) => m
-      case (m, Prim(Rest(0))) => m
+      case (Prim(Note(zero, _)), m) => m
+      case (Prim(Rest(zero)), m) => m
+      case (m, Prim(Note(zero, _))) => m
+      case (m, Prim(Rest(zero))) => m
       case (m1, m2) => m1 :=: m2
     }
     case :+:(m1, m2) => (removeZeros(m1), removeZeros(m2)) match {
-      case (Prim(Note(0, _)), m) => m
-      case (Prim(Rest(0)), m) => m
-      case (m, Prim(Note(0, _))) => m
-      case (m, Prim(Rest(0))) => m
+      case (Prim(Note(zero, _)), m) => m
+      case (Prim(Rest(zero)), m) => m
+      case (m, Prim(Note(zero, _))) => m
+      case (m, Prim(Rest(zero))) => m
       case (m1, m2) => m1 :+: m2
     }
   }

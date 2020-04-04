@@ -7,6 +7,10 @@ final object Types {
   type Octave = Int
   type Pitch = (PitchClass, Octave)
   type Duration = Rational
+  // non decreasing list of durations such that the last element in the list is the actual duration,
+  // and an infinite list implies an infinite duration
+  type LazyDur = LazyList[Duration]
+  val LazyNil = LazyList.empty
   type AbsPitch = Int
   type Tempo = Rational
   type PhraseAttribute = Any     // TODO

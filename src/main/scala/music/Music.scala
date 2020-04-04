@@ -332,4 +332,23 @@ final object Music {
     case :=:(m1, m2) => remove(d, m1) :=: remove(d, m2)
   }
 
+  def removeZeros[A](m: Music[A]): Music[A] = m match {
+    case Prim(p) => Prim(p)
+    case Modify(c, m) => Modify(c, removeZeros(m))
+    case :=:(m1, m2) => (removeZeros(m1), removeZeros(m2)) match {
+      case (Prim(Note(0, _)), m) => m
+      case (Prim(Rest(0)), m) => m
+      case (m, Prim(Note(0, _))) => m
+      case (m, Prim(Rest(0))) => m
+      case (m1, m2) => m1 :=: m2
+    }
+    case :+:(m1, m2) => (removeZeros(m1), removeZeros(m2)) match {
+      case (Prim(Note(0, _)), m) => m
+      case (Prim(Rest(0)), m) => m
+      case (m, Prim(Note(0, _))) => m
+      case (m, Prim(Rest(0))) => m
+      case (m1, m2) => m1 :+: m2
+    }
+  }
+
 }

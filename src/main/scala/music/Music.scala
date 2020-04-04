@@ -1,9 +1,10 @@
 package music
 
 import music.Types._
+import spire.math.Rational
 import spire.math.Rational.zero
-import scala.collection.immutable.LazyList.#::
 
+import scala.collection.immutable.LazyList.#::
 import scala.math.{abs, max, min}
 
 sealed trait Primitive[A]
@@ -379,19 +380,39 @@ final object Music {
     case Prim(p) => Prim(p)
     case Modify(c, m) => Modify(c, removeZeros(m))
     case :=:(m1, m2) => (removeZeros(m1), removeZeros(m2)) match {
-      case (Prim(Note(zero, _)), m) => m
-      case (Prim(Rest(zero)), m) => m
-      case (m, Prim(Note(zero, _))) => m
-      case (m, Prim(Rest(zero))) => m
+      case (Prim(Note(d, _)), m) if (d == zero) => m
+      case (Prim(Rest(d)), m) if (d == zero) => m
+      case (m, Prim(Note(d, _))) if (d == zero) => m
+      case (m, Prim(Rest(d))) if (d == zero) => m
       case (m1, m2) => m1 :=: m2
     }
     case :+:(m1, m2) => (removeZeros(m1), removeZeros(m2)) match {
-      case (Prim(Note(zero, _)), m) => m
-      case (Prim(Rest(zero)), m) => m
-      case (m, Prim(Note(zero, _))) => m
-      case (m, Prim(Rest(zero))) => m
+      case (Prim(Note(d, _)), m) if (d == zero) => m
+      case (Prim(Rest(d)), m) if (d == zero) => m
+      case (m, Prim(Note(d, _))) if (d == zero) => m
+      case (m, Prim(Rest(d))) if (d == zero) => m
       case (m1, m2) => m1 :+: m2
     }
   }
+
+  def trill(interval: Int, d: Duration, m: Music[Pitch]): Music[Pitch] = (interval, d, m) match {
+    case (i, sDur, Prim(Note(tDur, p))) =>
+      if (sDur >= tDur)
+        note(tDur, p)
+      else
+        note(sDur, p) :+: trill(-i, sDur, note(tDur-sDur, trans(i, p)))
+    case (i, d, Modify(Tempo(r), m)) => tempo(r, trill(i, d*r, m))
+    case (i, d, Modify(c, m)) => Modify(c, trill(i, d, m))
+    case _ => rest(zero) // TODO input must be a single note
+  }
+
+  def trillOtherNote(interval: Int, d: Duration, m: Music[Pitch]): Music[Pitch] =
+    trill(-interval, d, transpose(interval, m))
+
+  def trilln(interval: Int, nTimes: Int, m: Music[Pitch]): Music[Pitch] =
+    trill(interval, dur(m) / Rational(nTimes), m)
+
+  def trillnOtherNote(interval: Int, nTimes: Int, m: Music[Pitch]): Music[Pitch] =
+    trilln(-interval, nTimes, transpose(interval, m))
 
 }

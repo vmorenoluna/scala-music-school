@@ -203,9 +203,21 @@ final object Music {
   def addDuration[A](d: Duration, notes: List[Duration => Music[A]]): Music[A] =
     line(notes.map(note => note(d)))
 
-  def graceNote(step: Step, n: Music[Pitch]): Music[Pitch] = n match {
+  // TODO force a single note in the signature
+  def graceNote(step: Step, m: Music[Pitch]): Music[Pitch] = m match {
     case Prim(Note(d, p: Pitch)) => note(d / 8, trans(step, p)) :+: note(7 * d / 8, p)
-    case _ => n
+    case _ => m
+  }
+
+  def grace(step: Step, fraction: Rational, m: Music[Pitch]): Music[Pitch] = (step, fraction, m) match {
+    case (n, r, Prim(Note(d, p: Pitch))) => note(r * d, trans(n, p)) :+: note((1 - r) * d, p)
+    case _ => m
+  }
+
+  def grace2(step: Step, fraction: Rational, m1: Music[Pitch], m2: Music[Pitch]): Music[Pitch] = (step, fraction, m1, m2) match {
+    case (n, r, Prim(Note(d1, p1: Pitch)), Prim(Note(d2, p2: Pitch))) =>
+      note(d1 - r * d2, p1) :+: note(r * d2, trans(n, p2)) :+: note(d2, p2)
+    case _ => m2
   }
 
   def apPairs(aps1: List[AbsPitch], aps2: List[AbsPitch]): List[(AbsPitch, AbsPitch)] =

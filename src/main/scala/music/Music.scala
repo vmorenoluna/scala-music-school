@@ -435,4 +435,7 @@ final object Music {
   def rolln(nTimes: Int, m: Music[Pitch]): Music[Pitch] =
     trilln(0, nTimes, m)
 
+  def perc(ps: PercussionSound.Value, d: Duration): Music[Pitch] =
+    instrument(Percussion, note(d, pitch(ps.id + 35)))
+
 }

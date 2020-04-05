@@ -132,3 +132,53 @@ final case object Applause extends InstrumentName
 final case object Gunshot extends InstrumentName
 final case object Percussion extends InstrumentName
 final case class CustomInstrument(name: String) extends InstrumentName
+
+sealed trait PercussionSound
+
+final case object AcousticBassDrum extends PercussionSound
+final case object BassDrum1 extends PercussionSound
+final case object SideStick extends PercussionSound
+final case object AcousticSnare extends PercussionSound
+final case object HandClap extends PercussionSound
+final case object ElectricSnare extends PercussionSound
+final case object LowFloorTom extends PercussionSound
+final case object ClosedHiHat extends PercussionSound
+final case object HighFloorTom extends PercussionSound
+final case object PedalHiHat extends PercussionSound
+final case object LowTom extends PercussionSound
+final case object OpenHiHat extends PercussionSound
+final case object LowMidTom extends PercussionSound
+final case object HiMidTom extends PercussionSound
+final case object CrashCymbal1 extends PercussionSound
+final case object HighTom extends PercussionSound
+final case object RideCymbal1 extends PercussionSound
+final case object ChineseCymbal extends PercussionSound
+final case object RideBell extends PercussionSound
+final case object Tambourine extends PercussionSound
+final case object SplashCymbal extends PercussionSound
+final case object Cowbell extends PercussionSound
+final case object CrashCymbal2 extends PercussionSound
+final case object Vibraslap extends PercussionSound
+final case object RideCymbal2 extends PercussionSound
+final case object HiBongo extends PercussionSound
+final case object LowBongo extends PercussionSound
+final case object MuteHiConga extends PercussionSound
+final case object OpenHiConga extends PercussionSound
+final case object LowConga extends PercussionSound
+final case object HighTimbale extends PercussionSound
+final case object LowTimbale extends PercussionSound
+final case object HighAgogo extends PercussionSound
+final case object LowAgogo extends PercussionSound
+final case object Cabasa extends PercussionSound
+final case object Maracas extends PercussionSound
+final case object ShortWhistle extends PercussionSound
+final case object LongWhistle extends PercussionSound
+final case object ShortGuiro extends PercussionSound
+final case object LongGuiro extends PercussionSound
+final case object Claves extends PercussionSound
+final case object HiWoodBlock extends PercussionSound
+final case object LowWoodBlock extends PercussionSound
+final case object MuteCuica extends PercussionSound
+final case object OpenCuica extends PercussionSound
+final case object MuteTriangle extends PercussionSound
+final case object OpenTriangle extends PercussionSound

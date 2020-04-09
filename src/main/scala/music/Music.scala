@@ -453,4 +453,7 @@ final object Music {
   def addVolume(v: Volume, m: Music[Pitch]): Music[(Pitch,Volume)] =
     mMap[Pitch,(Pitch,Volume)](p => (p, v), m)
 
+  def scaleVolume(s: Rational, m: Music[(Pitch,Volume)]): Music[(Pitch,Volume)] =
+    mMap[(Pitch,Volume),(Pitch,Volume)](f => (f._1, (s * Rational(f._2)).intValue, m))
+
 }

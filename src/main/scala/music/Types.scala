@@ -15,6 +15,7 @@ final object Types {
   type Tempo = Rational
   type PhraseAttribute = Any     // TODO
   type Step = Int
+  type Volume = Int
 
   final implicit class Fraction(private val self: Int) extends AnyVal {
     def div(other: Int) = Rational(self, other)

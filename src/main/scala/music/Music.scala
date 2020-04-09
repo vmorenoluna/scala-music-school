@@ -450,4 +450,7 @@ final object Music {
     case :=:(m1, m2) => mMap(f, m1) :=: mMap(f, m2)
   }
 
+  def addVolume(v: Volume, m: Music[Pitch]): Music[(Pitch,Volume)] =
+    mMap[Pitch,(Pitch,Volume)](p => (p, v), m)
+
 }

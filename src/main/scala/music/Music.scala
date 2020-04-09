@@ -438,4 +438,16 @@ final object Music {
   def perc(ps: PercussionSound.Value, d: Duration): Music[Pitch] =
     instrument(Percussion, note(d, pitch(ps.id + 35)))
 
+  def pMap[A,B](f: A => B, p : Primitive[A]): Primitive[B] = p match {
+    case Note(d, x) => Note(d, f(x))
+    case Rest(d) => Rest(d)
+  }
+
+  def mMap[A,B](f: A => B, m : Music[A]): Music[B] = m match {
+    case Prim(p) => Prim(pMap(f, p))
+    case Modify(c, m) => Modify(c, mMap(f, m))
+    case :+:(m1, m2) => mMap(f, m1) :+: mMap(f, m2)
+    case :=:(m1, m2) => mMap(f, m1) :=: mMap(f, m2)
+  }
+
 }

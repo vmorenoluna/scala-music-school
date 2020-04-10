@@ -494,4 +494,9 @@ final object Music {
   def phaseIt[A](factor: Duration, m: Music[A]): Music[A] =
     m :=: tempo(factor, m)
 
+  def rep[A](f: Music[A] => Music[A], g: Music[A] => Music[A], n: Int, m: Music[A]): Music[A] = n match {
+    case 0 => rest(zero)
+    case n => m :=: g(rep(f, g, n-1, f(m)))
+  }
+
 }

@@ -187,4 +187,20 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "toIntervals" should "return all lists of intervals from a starting list" in {
+    val musicIntervals = List(1,5,3,6,5,0,1,1)
+
+    toIntervals(musicIntervals) should equal(
+      List(
+        List(4,-2,3,-1,-5,1,0),
+        List(-6,5,-4,-4,6,-1),
+        List(11,-9,0,10,-7),
+        List(-20,9,10,-17),
+        List(29,1,-27),
+        List(-28,-28),
+        List(0)
+      )
+    )
+  }
+
 }

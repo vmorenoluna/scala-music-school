@@ -22,7 +22,9 @@ sealed trait Music[A] {
 }
 
 final case class Prim[A](primitive: Primitive[A]) extends Music[A]
+
 final case class Modify[A](control: Control, music: Music[A]) extends Music[A]
+
 final case class :+:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO sequential composition
 final case class :=:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO parallel composition
 
@@ -468,11 +470,12 @@ final object Music {
     }
   }
 
-  def nMapWithMFold[A,B](f: A => B, m: Music[A]): Music[B] = {
+  def nMapWithMFold[A, B](f: A => B, m: Music[A]): Music[B] = {
     def g(p: Primitive[A]): Music[B] = p match {
       case Note(d, x) => note(d, f(x))
       case Rest(d) => rest(d)
     }
+
     mFold(g)(_ :+: _)(_ :=: _)(Modify(_, _))(m)
   }
 
@@ -481,10 +484,12 @@ final object Music {
       case Note(d, _) => d
       case Rest(d) => d
     }
+
     def modDur(c: Control, d: Duration) = c match {
       case Tempo(r) => d / r
       case _ => d
     }
+
     mFold(getDur)(_ + _)(_ max _)(modDur)(m)
   }
 
@@ -496,7 +501,16 @@ final object Music {
 
   def rep[A](f: Music[A] => Music[A], g: Music[A] => Music[A], n: Int, m: Music[A]): Music[A] = n match {
     case 0 => rest(zero)
-    case n => m :=: g(rep(f, g, n-1, f(m)))
+    case n => m :=: g(rep(f, g, n - 1, f(m)))
+  }
+
+  def toIntervals(l: List[Int]): List[List[Int]] = l match {
+    case Nil => Nil
+    case List(n) if n == 0 => Nil
+    case _ => {
+      val s = (for (p <- l.sliding(2)) yield (p.last - p.head)).toList
+      s :: toIntervals(s)
+    }
   }
 
 }

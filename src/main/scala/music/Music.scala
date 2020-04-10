@@ -22,9 +22,7 @@ sealed trait Music[A] {
 }
 
 final case class Prim[A](primitive: Primitive[A]) extends Music[A]
-
 final case class Modify[A](control: Control, music: Music[A]) extends Music[A]
-
 final case class :+:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO sequential composition
 final case class :=:[A](m: Music[A], n: Music[A]) extends Music[A] // TODO parallel composition
 
@@ -438,22 +436,56 @@ final object Music {
   def perc(ps: PercussionSound.Value, d: Duration): Music[Pitch] =
     instrument(Percussion, note(d, pitch(ps.id + 35)))
 
-  def pMap[A,B](f: A => B, p : Primitive[A]): Primitive[B] = p match {
+  def pMap[A, B](f: A => B, p: Primitive[A]): Primitive[B] = p match {
     case Note(d, x) => Note(d, f(x))
     case Rest(d) => Rest(d)
   }
 
-  def mMap[A,B](f: A => B, m : Music[A]): Music[B] = m match {
+  def mMap[A, B](f: A => B, m: Music[A]): Music[B] = m match {
     case Prim(p) => Prim(pMap(f, p))
     case Modify(c, m) => Modify(c, mMap(f, m))
     case :+:(m1, m2) => mMap(f, m1) :+: mMap(f, m2)
     case :=:(m1, m2) => mMap(f, m1) :=: mMap(f, m2)
   }
 
-  def addVolume(v: Volume, m: Music[Pitch]): Music[(Pitch,Volume)] =
-    mMap[Pitch,(Pitch,Volume)](p => (p, v), m)
+  def addVolume(v: Volume, m: Music[Pitch]): Music[(Pitch, Volume)] =
+    mMap[Pitch, (Pitch, Volume)](p => (p, v), m)
 
-  def scaleVolume(s: Rational, m: Music[(Pitch,Volume)]): Music[(Pitch,Volume)] =
-    mMap[(Pitch,Volume),(Pitch,Volume)](f => (f._1, (s * Rational(f._2)).intValue, m))
+  def scaleVolume(s: Rational, m: Music[(Pitch, Volume)]): Music[(Pitch, Volume)] =
+    mMap[(Pitch, Volume), (Pitch, Volume)](f => (f._1, (s * Rational(f._2)).intValue, m))
+
+  def mFold[A, B](f: Primitive[A] => B)
+                 (+: : (B, B) => B)
+                 (=: : (B, B) => B)
+                 (g: (Control, B) => B)
+                 (m: Music[A]): B = {
+    val rec: Music[A] => B = mFold(f)(+:)(=:)(g)
+    m match {
+      case Prim(p) => f(p)
+      case Modify(c, m) => g(c, rec(m))
+      case :+:(m1, m2) => +:(rec(m1), rec(m2))
+      case :=:(m1, m2) => =:(rec(m1), rec(m2))
+    }
+  }
+
+  def nMapWithMFold[A,B](f: A => B, m: Music[A]): Music[B] = {
+    def g(p: Primitive[A]): Music[B] = p match {
+      case Note(d, x) => note(d, f(x))
+      case Rest(d) => rest(d)
+    }
+    mFold(g)(_ :+: _)(_ :=: _)(Modify(_, _))(m)
+  }
+
+  def durWithMFold[A](m: Music[A]): Duration = {
+    def getDur(p: Primitive[A]): Duration = p match {
+      case Note(d, _) => d
+      case Rest(d) => d
+    }
+    def modDur(c: Control, d: Duration) = c match {
+      case Tempo(r) => d / r
+      case _ => d
+    }
+    mFold(getDur)(_ + _)(_ max _)(modDur)
+  }
 
 }

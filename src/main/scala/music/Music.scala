@@ -488,6 +488,10 @@ final object Music {
     mFold(getDur)(_ + _)(_ max _)(modDur)(m)
   }
 
+  def triplets[A](m: Music[A]): Music[A] =
+    tempo(Rational(3) / Rational(2), m)
 
+  def phaseIt[A](factor: Duration, m: Music[A]): Music[A] =
+    m :=: tempo(factor, m)
 
 }

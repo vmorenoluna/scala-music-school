@@ -452,7 +452,7 @@ final object Music {
     mMap[Pitch, (Pitch, Volume)](p => (p, v), m)
 
   def scaleVolume(s: Rational, m: Music[(Pitch, Volume)]): Music[(Pitch, Volume)] =
-    mMap[(Pitch, Volume), (Pitch, Volume)](f => (f._1, (s * Rational(f._2)).intValue, m))
+    mMap[(Pitch, Volume), (Pitch, Volume)](f => (f._1, (s * Rational(f._2)).intValue), m)
 
   def mFold[A, B](f: Primitive[A] => B)
                  (+: : (B, B) => B)
@@ -485,7 +485,9 @@ final object Music {
       case Tempo(r) => d / r
       case _ => d
     }
-    mFold(getDur)(_ + _)(_ max _)(modDur)
+    mFold(getDur)(_ + _)(_ max _)(modDur)(m)
   }
+
+
 
 }

@@ -106,10 +106,19 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "retro2" should "reverse a line" in {
+    val music = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
+
+    retro2(music) should equal(
+      ((c(5)(qn) :+: g(4)(qn)) :+: f(5)(qn)) :+: b(4)(qn)
+    )
+  }
+
   "retro" should "reverse a line" in {
     val music = b(4)(qn) :+: f(5)(qn) :+: g(4)(qn) :+: c(5)(qn)
 
     retro(music) should equal(
+//      ((c(5)(qn) :+: g(4)(qn)) :+: f(5)(qn)) :+: b(4)(qn)   TODO the new retro works but breaks the tests
       c(5)(qn) :+: g(4)(qn) :+: f(5)(qn) :+: b(4)(qn) :+: rest(0)
     )
   }

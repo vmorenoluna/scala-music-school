@@ -212,4 +212,20 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "getHeads" should "return a list with all the heads of a list of lists" in {
+    val lists = List(
+      List(4,-2,3,-1,-5,1,0),
+      List(-6,5,-4,-4,6,-1),
+      List(11,-9,0,10,-7),
+      List(-20,9,10,-17),
+      List(29,1,-27),
+      List(-28,-28),
+      List(0)
+    )
+
+    getHeads(lists) should equal(
+      List(4,-6,11,-20,29,-28,0)
+    )
+  }
+
 }

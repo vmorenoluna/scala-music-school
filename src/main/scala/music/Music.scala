@@ -513,4 +513,9 @@ final object Music {
     }
   }
 
+  def getHeads(l: List[List[Int]]): List[Int] = l match {
+    case Nil => Nil
+    case ::(h, t) => h.head :: getHeads(t)
+  }
+
 }

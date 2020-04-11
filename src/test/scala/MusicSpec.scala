@@ -228,4 +228,12 @@ class MusicSpec extends UnitSpec {
     )
   }
 
+  "intervalClosure" should "return the interval closure from a starting list" in {
+    val musicIntervals = List(1,5,3,6,5,0,1,1)
+
+    intervalClosure(musicIntervals) should equal(
+      List(4,-6,11,-20,29,-28,0)
+    )
+  }
+
 }

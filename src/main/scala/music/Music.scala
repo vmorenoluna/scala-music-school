@@ -518,4 +518,7 @@ final object Music {
     case ::(h, t) => h.head :: getHeads(t)
   }
 
+  def intervalClosure(l: List[Int]): List[Int] =
+    getHeads(toIntervals(l))
+
 }

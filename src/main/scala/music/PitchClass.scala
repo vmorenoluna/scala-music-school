@@ -1,6 +1,12 @@
 package music
 
+import cats.kernel.Eq
+
 sealed trait PitchClass
+
+object PitchClass {
+  implicit val pitchClassEq: Eq[PitchClass] = Eq.fromUniversalEquals
+}
 
 final case object Cff extends PitchClass
 final case object Cf extends PitchClass

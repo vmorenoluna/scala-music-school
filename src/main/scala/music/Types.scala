@@ -1,6 +1,8 @@
 package music
 
+import cats.kernel.Eq
 import spire.math.Rational
+
 import scala.math.Integral.Implicits._
 
 final object Types {
@@ -20,6 +22,9 @@ final object Types {
   final implicit class Fraction(private val self: Int) extends AnyVal {
     def div(other: Int) = Rational(self, other)
   }
+
+  implicit val octaveEq: Eq[Octave] = Eq.fromUniversalEquals
+  implicit val pitchEq: Eq[Pitch] = Eq.fromUniversalEquals
 
   def absPitch(p: Pitch): AbsPitch = 12 * (p._2) + pcToInt(p._1)
 

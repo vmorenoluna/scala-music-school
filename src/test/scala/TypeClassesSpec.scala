@@ -1,5 +1,7 @@
-import music.{Cff, D}
-import music.PitchClass.{pitchClassEq, pitchClassOrder}
+import music.Music._
+import music._
+import music.PitchClass._
+import music.PrimitiveTypeClassInstances._
 
 class TypeClassesSpec extends UnitSpec {
 
@@ -14,6 +16,13 @@ class TypeClassesSpec extends UnitSpec {
     pitchClassOrder.compare(Cff, D) shouldEqual -1
     pitchClassOrder.compare(Cff, Cff) shouldEqual 0
     pitchClassOrder.compare(D, Cff) shouldEqual 1
+  }
+
+  "Primitive" should "be in Eq type class" in {
+    notePrimitive.eqv(Note(qn, (C, 4)), Note(qn, (C, 4))) shouldEqual true
+    notePrimitive.neqv(Note(qn, (C, 4)), Note(en, (D, 5))) shouldEqual true
+    restPrimitive.eqv(Rest(qn), Rest(qn)) shouldEqual true
+    restPrimitive.neqv(Rest(qn), Rest(en)) shouldEqual true
   }
 
 }

@@ -1,6 +1,8 @@
 package music
 
-import cats.kernel.Eq
+import cats.kernel.{Eq, Order}
+import cats.syntax.eq._
+import PitchClassOps._
 import spire.math.Rational
 
 import scala.math.Integral.Implicits._
@@ -25,6 +27,14 @@ final object Types {
 
   implicit val octaveEq: Eq[Octave] = Eq.fromUniversalEquals
   implicit val pitchEq: Eq[Pitch] = Eq.fromUniversalEquals
+  implicit val pitchOrder: Order[Pitch] = Order.from((a, b) => {
+      (a, b) match {
+        case ((p1,o1), (p2,o2)) if (o1 > o2 || (o1 === o2  && (p1 gt p2))) => 1
+        case ((p1,o1), (p2,o2)) if o1 === o2  && (p1 === p2) => 0
+        case ((p1,o1), (p2,o2)) if (o1 < o2 || (o1 === o2  && (p1 lt p2))) => -1
+      }
+    }
+  )
 
   def absPitch(p: Pitch): AbsPitch = 12 * (p._2) + pcToInt(p._1)
 

@@ -25,4 +25,15 @@ class TypeClassesSpec extends UnitSpec {
     restPrimitive.neqv(Rest(qn), Rest(en)) shouldEqual true
   }
 
+  "Primitive" should "be in Order type class" in {
+    notePrimitive.compare(Note(qn, (E, 4)), Note(qn, (C, 4))) shouldEqual 1
+    notePrimitive.compare(Note(qn, (C, 4)), Note(en, (C, 4))) shouldEqual 1
+    notePrimitive.compare(Note(qn, (C, 4)), Note(qn, (C, 4))) shouldEqual 0
+    notePrimitive.compare(Note(qn, (F, 4)), Note(en, (D, 5))) shouldEqual -1
+    notePrimitive.compare(Note(qn, (D, 4)), Note(hn, (D, 5))) shouldEqual -1
+    restPrimitive.compare(Rest(wn), Rest(qn)) shouldEqual 1
+    restPrimitive.compare(Rest(qn), Rest(qn)) shouldEqual 0
+    restPrimitive.compare(Rest(en), Rest(qn)) shouldEqual -1
+  }
+
 }

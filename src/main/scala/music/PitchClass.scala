@@ -54,6 +54,13 @@ object PitchClass {
   }
 }
 
+object PitchClassOps {
+  final implicit class PitchClassOrderOps[A](private val self: A) {
+    def gt(other: A)(implicit p: Order[A]): Boolean = p.gt(self, other)
+    def lt(other: A)(implicit p: Order[A]): Boolean = p.lt(self, other)
+  }
+}
+
 final case object Cff extends PitchClass
 
 final case object Cf extends PitchClass

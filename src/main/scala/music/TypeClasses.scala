@@ -5,9 +5,7 @@ import music.Types._
 
 sealed trait PrimitiveTypeClass[A] {
   def eqv(x: A, y: A): Boolean
-
   def neqv(x: A, y: A): Boolean
-
   def compare(x: A, y: A): Int
 }
 
@@ -21,13 +19,11 @@ object PrimitiveTypeClassInstances {
       case (Rest(d1), Rest(d2)) => d1 === d2
       case _ => false
     }
-
     override def neqv(x: Primitive[Pitch], y: Primitive[Pitch]): Boolean = (x, y) match {
       case (Note(d1, p1), Note(d2, p2)) => (d1 =!= d2) || (p1 =!= p2)
       case (Rest(d1), Rest(d2)) => d1 =!= d2
       case _ => false
     }
-
     override def compare(x: Primitive[Pitch], y: Primitive[Pitch]): Int = (x, y) match {
       case (Note(d1, p1), Note(d2, p2)) if (p1 gt p2) || (p1 === p2 && d1 > d2) => 1
       case (Note(d1, p1), Note(d2, p2)) if p1 === p2 && d1 === d2 => 0
@@ -38,22 +34,17 @@ object PrimitiveTypeClassInstances {
 
 }
 
-sealed trait MusicTypeClass[A] {
-  def eqv(x: A, y: A): Boolean
-
-  def neqv(x: A, y: A): Boolean
-
-  def compare(x: A, y: A): Int
-}
-
 object PrimitiveOps {
-
   final implicit class PrimitiveEqOps[A](private val self: A) {
     def ===(other: A)(implicit p: PrimitiveTypeClass[A]): Boolean = p.eqv(self, other)
-
     def =!=(other: A)(implicit p: PrimitiveTypeClass[A]): Boolean = p.neqv(self, other)
   }
+}
 
+sealed trait MusicTypeClass[A] {
+  def eqv(x: A, y: A): Boolean
+  def neqv(x: A, y: A): Boolean
+  def compare(x: A, y: A): Int
 }
 
 object MusicTypeClassInstances {
@@ -61,7 +52,7 @@ object MusicTypeClassInstances {
   import PrimitiveTypeClassInstances._
   import PrimitiveOps._
 
-  implicit val primMusic: MusicTypeClass[Music[Pitch]] = new MusicTypeClass[Music[Pitch]] {
+  implicit val musicInstance: MusicTypeClass[Music[Pitch]] = new MusicTypeClass[Music[Pitch]] {
 
     override def eqv(x: Music[Pitch], y: Music[Pitch]): Boolean = (x, y) match {
       case (Prim(p1), Prim(p2)) => p1 === p2

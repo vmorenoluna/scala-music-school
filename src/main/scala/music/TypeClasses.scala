@@ -101,15 +101,15 @@ object MusicTypeClassInstances {
 
     override def compare(x: Music[Pitch], y: Music[Pitch]): Int = (x, y) match {
       case (Prim(p1), Prim(p2)) => primitiveInstance.compare(p1, p2)
-      case (Prim(p1), _) => -1
-      case (Modify(c1, m1), Modify(c2, m2)) => compare(m1, m2) // TODO typeclass for control (c1<c2) || ((c1==c2) && (m1<m2))
-      case (Modify(_, m1), _) => 1
-      case (:+:(m1, m2), Prim(_)) => 1
+      case (Prim(_), _) => -1
+      case (Modify(_, m1), Modify(_, m2)) => compare(m1, m2) // TODO typeclass for control (c1<c2) || ((c1==c2) && (m1<m2))
+      case (Modify(_, _), _) => 1
+      case (:+:(_, _), Prim(_)) => 1
       case (:+:(m1, m2), :+:(m3, m4)) if (compare(m1, m3) == -1) || ((m1 == m3) && (compare(m2, m4) == -1)) => -1
-      case (:+:(m1, m2), _) => -1
-      case (:=:(m1, m2), Prim(_)) => 1
+      case (:+:(_, _), _) => -1
+      case (:=:(_, _), Prim(_)) => 1
       case (:=:(m1, m2), :=:(m3, m4)) if (compare(m1, m3) == -1) || ((m1 == m3) && (compare(m2, m4) == -1)) => -1
-      case (:=:(m1, m2), _) => -1
+      case (:=:(_, _), _) => -1
     }
 
   }

@@ -35,6 +35,8 @@ class TypeClassesSpec extends UnitSpec {
     primitiveInstance.compare(Rest(wn), Rest(qn)) shouldEqual 1
     primitiveInstance.compare(Rest(qn), Rest(qn)) shouldEqual 0
     primitiveInstance.compare(Rest(en), Rest(qn)) shouldEqual -1
+    primitiveInstance.compare(Rest(en), Note(qn, (E, 4))) shouldEqual -1
+    primitiveInstance.compare(Note(qn, (E, 4)), Rest(qn)) shouldEqual 1
   }
 
   "Music" should "be in Eq type class" in {
@@ -83,5 +85,47 @@ class TypeClassesSpec extends UnitSpec {
     ) shouldEqual true
   }
 
+  "Music" should "be in Order type class" in {
+    musicInstance.compare(c(4)(qn), d(4)(qn)) shouldEqual -1
+    musicInstance.compare(c(4)(qn), c(4)(qn)) shouldEqual 0
+    musicInstance.compare(d(4)(qn), c(4)(qn)) shouldEqual 1
+    musicInstance.compare(d(4)(qn), c(4)(qn) :+: d(4)(qn)) shouldEqual -1
+    musicInstance.compare(d(4)(qn), c(4)(qn) :=: d(4)(qn)) shouldEqual -1
+    musicInstance.compare(d(4)(qn), instrument(AltoSax, c(4)(qn) :+: e(5)(en))) shouldEqual -1
+    musicInstance.compare(
+      instrument(AltoSax, c(4)(qn) :+: d(5)(en)),
+      instrument(AltoSax, c(4)(qn) :+: e(5)(en))
+    ) shouldEqual -1
+    musicInstance.compare(
+      instrument(AltoSax, c(4)(qn) :+: d(5)(en)),
+      instrument(AltoSax, c(4)(qn) :+: d(5)(en))
+    ) shouldEqual 0
+    musicInstance.compare(
+      instrument(AltoSax, c(4)(qn) :+: f(5)(en)),
+      instrument(AltoSax, c(4)(qn) :+: e(5)(en))
+    ) shouldEqual 1
+    musicInstance.compare(
+      instrument(AltoSax, c(4)(qn) :+: f(5)(en)),
+      c(4)(qn) :+: e(5)(en)
+    ) shouldEqual 1
+    musicInstance.compare(c(4)(qn) :+: d(4)(qn), e(4)(qn)) shouldEqual 1
+    musicInstance.compare(c(4)(qn) :+: d(4)(qn), rest(0)) shouldEqual 1
+    musicInstance.compare(c(4)(qn) :+: d(4)(qn), c(4)(qn) :+: e(4)(qn)) shouldEqual -1
+    musicInstance.compare(c(4)(qn) :+: d(4)(qn), c(4)(qn) :+: d(4)(qn)) shouldEqual 0
+    musicInstance.compare(c(4)(qn) :+: d(4)(qn), c(4)(qn) :+: d(3)(qn)) shouldEqual 1
+    musicInstance.compare(
+      c(4)(qn) :+: d(4)(qn),
+      instrument(AltoSax, c(4)(qn) :+: d(4)(en))
+    ) shouldEqual -1
+    musicInstance.compare(c(4)(qn) :=: d(4)(qn), e(4)(qn)) shouldEqual 1
+    musicInstance.compare(c(4)(qn) :=: d(4)(qn), rest(0)) shouldEqual 1
+    musicInstance.compare(c(4)(qn) :=: d(4)(qn), c(4)(qn) :=: e(4)(qn)) shouldEqual -1
+    musicInstance.compare(c(4)(qn) :=: d(4)(qn), c(4)(qn) :=: d(4)(qn)) shouldEqual 0
+    musicInstance.compare(c(4)(qn) :=: d(4)(qn), c(4)(qn) :=: d(3)(qn)) shouldEqual 1
+    musicInstance.compare(
+      c(4)(qn) :=: d(4)(qn),
+      instrument(AltoSax, c(4)(qn) :+: d(4)(en))
+    ) shouldEqual -1
+  }
 
 }

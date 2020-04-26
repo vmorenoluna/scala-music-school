@@ -29,6 +29,8 @@ object PrimitiveTypeClassInstances {
       case (Note(d1, p1), Note(d2, p2)) if p1 === p2 && d1 === d2 => 0
       case (Note(d1, p1), Note(d2, p2)) if (p1 lt p2) || (p1 === p2 && d1 < d2) => -1
       case (Rest(d1), Rest(d2)) => d1 compare d2
+      case (Rest(_), Note(_, _)) => -1
+      case (Note(_, _), Rest(_)) => 1
     }
   }
 
@@ -73,14 +75,18 @@ object MusicTypeClassInstances {
     override def compare(x: Music[Pitch], y: Music[Pitch]): Int = (x, y) match {
       case (Prim(p1), Prim(p2)) => primitiveInstance.compare(p1, p2)
       case (Prim(_), _) => -1
-      case (Modify(_, m1), Modify(_, m2)) => compare(m1, m2) // TODO typeclass for control (c1<c2) || ((c1==c2) && (m1<m2))
-      case (Modify(_, _), _) => 1
       case (:+:(_, _), Prim(_)) => 1
-      case (:+:(m1, m2), :+:(m3, m4)) if (compare(m1, m3) == -1) || ((m1 == m3) && (compare(m2, m4) == -1)) => -1
+      case (:+:(m1, m2), :+:(m3, m4)) if (compare(m1, m3) == -1) || (compare(m1, m3) == 0 && compare(m2, m4) == -1) => -1
+      case (:+:(m1, m2), :+:(m3, m4)) if (compare(m1, m3) == 0) && (compare(m2, m4) == 0) => 0
+      case (:+:(m1, m2), :+:(m3, m4)) if (compare(m1, m3) == 1) || (compare(m1, m3) == 0 && compare(m2, m4) == 1) => 1
       case (:+:(_, _), _) => -1
       case (:=:(_, _), Prim(_)) => 1
-      case (:=:(m1, m2), :=:(m3, m4)) if (compare(m1, m3) == -1) || ((m1 == m3) && (compare(m2, m4) == -1)) => -1
+      case (:=:(m1, m2), :=:(m3, m4)) if (compare(m1, m3) == -1) || (compare(m1, m3) == 0 && compare(m2, m4) == -1) => -1
+      case (:=:(m1, m2), :=:(m3, m4)) if (compare(m1, m3) == 0) && (compare(m2, m4) == 0) => 0
+      case (:=:(m1, m2), :=:(m3, m4)) if (compare(m1, m3) == 1) || (compare(m1, m3) == 0 && compare(m2, m4) == 1) => 1
       case (:=:(_, _), _) => -1
+      case (Modify(_, m1), Modify(_, m2)) => compare(m1, m2) // TODO typeclass for control (c1<c2) || ((c1==c2) && (m1<m2))
+      case (Modify(_, _), _) => 1
     }
 
   }

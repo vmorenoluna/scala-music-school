@@ -2,6 +2,7 @@ import music.Music._
 import music._
 import music.PitchClass._
 import music.PrimitiveTypeClassInstances._
+import music.MusicTypeClassInstances._
 
 class TypeClassesSpec extends UnitSpec {
 
@@ -35,5 +36,52 @@ class TypeClassesSpec extends UnitSpec {
     primitiveInstance.compare(Rest(qn), Rest(qn)) shouldEqual 0
     primitiveInstance.compare(Rest(en), Rest(qn)) shouldEqual -1
   }
+
+  "Music" should "be in Eq type class" in {
+    musicInstance.eqv(c(4)(qn), c(4)(qn)) shouldEqual true
+    musicInstance.eqv(c(4)(qn), d(4)(qn)) shouldEqual false
+    musicInstance.eqv(c(4)(qn) :+: d(4)(qn), c(4)(qn) :+: d(4)(qn)) shouldEqual true
+    musicInstance.eqv(c(4)(qn) :+: d(4)(qn), d(4)(qn) :+: f(4)(qn)) shouldEqual false
+    musicInstance.eqv(c(4)(qn) :=: d(4)(qn), c(4)(qn) :=: d(4)(qn)) shouldEqual true
+    musicInstance.eqv(c(4)(qn) :=: d(4)(qn), d(4)(qn) :=: f(4)(qn)) shouldEqual false
+    musicInstance.eqv(
+      instrument(AltoSax, c(4)(qn) :=: d(4)(qn)), instrument(AltoSax, c(4)(qn) :=: d(4)(qn))
+    ) shouldEqual true
+    musicInstance.eqv(
+      instrument(Trumpet, c(4)(qn) :=: d(4)(qn)), instrument(AltoSax, c(4)(qn) :=: d(4)(qn))
+    ) shouldEqual false
+
+    musicInstance.eqv(
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :=: (f(4)(qn) :+: g(4)(qn) :+: e(4)(qn)),
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :=: (f(4)(qn) :+: g(4)(qn) :+: e(4)(qn))
+    ) shouldEqual true
+    musicInstance.eqv(
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :=: (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)),
+      (c(4)(qn) :+: d(4)(qn) :+: b(4)(qn)) :=: (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn))
+    ) shouldEqual false
+
+    musicInstance.neqv(c(4)(qn), c(4)(qn)) shouldEqual false
+    musicInstance.neqv(c(4)(qn), d(4)(qn)) shouldEqual true
+    musicInstance.neqv(c(4)(qn) :+: d(4)(qn), c(4)(qn) :+: d(4)(qn)) shouldEqual false
+    musicInstance.neqv(c(4)(qn) :+: d(4)(qn), d(4)(qn) :+: f(4)(qn)) shouldEqual true
+    musicInstance.neqv(c(4)(qn) :=: d(4)(qn), c(4)(qn) :=: d(4)(qn)) shouldEqual false
+    musicInstance.neqv(c(4)(qn) :=: d(4)(qn), d(4)(qn) :=: f(4)(qn)) shouldEqual true
+    musicInstance.neqv(
+      instrument(AltoSax, c(4)(qn) :=: d(4)(qn)), instrument(AltoSax, c(4)(qn) :=: d(4)(qn))
+    ) shouldEqual false
+    musicInstance.neqv(
+      instrument(Trumpet, c(4)(qn) :=: d(4)(qn)), instrument(AltoSax, c(4)(qn) :=: d(4)(qn))
+    ) shouldEqual true
+
+    musicInstance.neqv(
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :=: (f(4)(qn) :+: g(4)(qn) :+: e(4)(qn)),
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :=: (f(4)(qn) :+: g(4)(qn) :+: e(4)(qn))
+    ) shouldEqual false
+    musicInstance.neqv(
+      (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)) :=: (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn)),
+      (c(4)(qn) :+: d(4)(qn) :+: b(4)(qn)) :=: (c(4)(qn) :+: d(4)(qn) :+: e(4)(qn))
+    ) shouldEqual true
+  }
+
 
 }

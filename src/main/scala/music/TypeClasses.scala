@@ -56,17 +56,17 @@ object MusicTypeClassInstances {
 
     override def eqv(x: Music[Pitch], y: Music[Pitch]): Boolean = (x, y) match {
       case (Prim(p1), Prim(p2)) => p1 === p2
-      case (Modify(c1, m1), Modify(c2, m2)) => (c1 == c2) && (m1 == m2)
-      case (:+:(m1, m2), :+:(m3, m4)) => (m1 == m3) && (m2 == m4)
-      case (:=:(m1, m2), :=:(m3, m4)) => (m1 == m3) && (m2 == m4)
+      case (Modify(c1, m1), Modify(c2, m2)) => (c1 == c2) && eqv(m1, m2)
+      case (:+:(m1, m2), :+:(m3, m4)) => eqv(m1, m3) && eqv(m2, m4)
+      case (:=:(m1, m2), :=:(m3, m4)) => eqv(m1, m3) && eqv(m2, m4)
       case _ => false
     }
 
     override def neqv(x: Music[Pitch], y: Music[Pitch]): Boolean = (x, y) match {
       case (Prim(p1), Prim(p2)) => p1 =!= p2
-      case (Modify(c1, m1), Modify(c2, m2)) => (c1 != c2) || (m1 != m2)
-      case (:+:(m1, m2), :+:(m3, m4)) => (m1 != m3) || (m2 != m4)
-      case (:=:(m1, m2), :=:(m3, m4)) => (m1 != m3) || (m2 != m4)
+      case (Modify(c1, m1), Modify(c2, m2)) => (c1 != c2) || neqv(m1, m2)
+      case (:+:(m1, m2), :+:(m3, m4)) => neqv(m1, m3) || neqv(m2, m4)
+      case (:=:(m1, m2), :=:(m3, m4)) => neqv(m1, m3) || neqv(m2, m4)
       case _ => false
     }
 

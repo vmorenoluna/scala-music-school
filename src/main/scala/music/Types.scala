@@ -16,8 +16,6 @@ final object Types {
   type LazyDur = LazyList[Duration]
   val LazyNil = LazyList.empty
   type AbsPitch = Int
-  type Tempo = Rational
-  type PhraseAttribute = Any     // TODO
   type Step = Int
   type Volume = Int
 

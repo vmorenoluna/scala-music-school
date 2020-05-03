@@ -8,7 +8,7 @@ sealed trait NoteAttribute
 final case class Volume(value: Int) extends NoteAttribute // 0-127
 final case class Fingering(value: Int) extends NoteAttribute
 final case class Dynamics(value: String) extends NoteAttribute
-final case class Paramsa(value: List[Double]) extends NoteAttribute
+final case class Params(value: List[Double]) extends NoteAttribute
 
 object Music1 {
   type Note1 = (Pitch, List[NoteAttribute])

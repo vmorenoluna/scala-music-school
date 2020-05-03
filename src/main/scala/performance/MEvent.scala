@@ -2,10 +2,9 @@ package performance
 
 import music.InstrumentName
 import music.Types.{AbsPitch, Volume}
-import performance.types.{DurT, PTime}
-import spire.math.Rational
+import performance.Performance.{DurT, PTime}
 
-case class MMEvent(
+case class MEvent(
                     eTime: PTime,           // onset time
                     eInst: InstrumentName,  // assigned instrument
                     ePitch: AbsPitch,       // pitch number 0-127
@@ -16,8 +15,4 @@ case class MMEvent(
 
 // TODO Eq and Ord typeclass for MMEvent
 
-object types {
-  type Performance = List[MMEvent]
-  type PTime = Rational
-  type DurT = Rational
-}
+

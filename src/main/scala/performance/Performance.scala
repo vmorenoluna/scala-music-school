@@ -52,6 +52,18 @@ object Performance {
 }
 
 object Metronome {
-  def metro(settings: Int, dur: Duration): DurT =
-    60 / (Rational(settings) * dur)
+  /**
+   * Calculate the ticked duration from a duration
+   *
+   * @param tempoInBPM is the tempo in BPM
+   * @param dur is the duration to convert
+   * @return the ticked duration
+   */
+  def metro(tempoInBPM: Int, dur: Duration): DurT = {
+//    val seconds = 60 / (tempoInBPM * dur)
+    val ticksPerBeat = 96
+//    val ticksPerSecond = ticksPerBeat * (tempoInBPM / 60.0)
+//    ticksPerSecond * seconds
+    ticksPerBeat / dur  // TODO
+  }
 }

@@ -4,6 +4,7 @@ import music.Types.{Pitch, Volume => Vol}
 import music.Music.mMap
 
 sealed trait NoteAttribute
+
 // TODO eq typeclass
 final case class Volume(value: Int) extends NoteAttribute // 0-127
 final case class Fingering(value: Int) extends NoteAttribute
@@ -11,6 +12,7 @@ final case class Dynamics(value: String) extends NoteAttribute
 final case class Params(value: List[Double]) extends NoteAttribute
 
 object Music1 {
+
   type Note1 = (Pitch, List[NoteAttribute])
   type Music1 = Music[Note1]
 
@@ -22,11 +24,11 @@ object Music1 {
     override def transform(m: Music[Pitch]): Music1 =
       mMap[Pitch, Note1](p => (p, List.empty), m)
   }
-   implicit val ToMusic1PitchVolumeInstance: ToMusic1TypeClass[(Pitch, Vol)] = new ToMusic1TypeClass[(Pitch, Vol)] {
+  implicit val ToMusic1PitchVolumeInstance: ToMusic1TypeClass[(Pitch, Vol)] = new ToMusic1TypeClass[(Pitch, Vol)] {
     override def transform(m: Music[(Pitch, Vol)]): Music1 =
       mMap[(Pitch, Vol), Note1](a => (a._1, List(Volume(a._2))), m)
   }
- implicit val ToMusic1Note1Instance: ToMusic1TypeClass[Note1] = new ToMusic1TypeClass[Note1] {
+  implicit val ToMusic1Note1Instance: ToMusic1TypeClass[Note1] = new ToMusic1TypeClass[Note1] {
     override def transform(m: Music[Note1]): Music1 = m
   }
 

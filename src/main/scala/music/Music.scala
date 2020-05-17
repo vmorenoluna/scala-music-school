@@ -261,8 +261,8 @@ final object Music {
     )
   }
 
-    def retro(m: Music[Pitch]): Music[Pitch] =
-      line(lineToList(m).reverse)
+  def retro(m: Music[Pitch]): Music[Pitch] =
+    line(lineToList(m).reverse)
 
   def retro2[A](m: Music[A]): Music[A] = m match {
     case n: Prim[A] => n

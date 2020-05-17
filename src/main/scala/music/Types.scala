@@ -34,7 +34,7 @@ final object Types {
     }
   )
 
-  def absPitch(p: Pitch): AbsPitch = 12 * (p._2) + pcToInt(p._1)
+  def absPitch(p: Pitch): AbsPitch = 12 * (p._2) + pcToInt(p._1)  // TODO 12 * (p._2 + 1) + pcToInt(p._1) so that (C,4) = 60
 
   def pcToInt(pitchClass: PitchClass): Int = pitchClass match {
     case Cff => -2

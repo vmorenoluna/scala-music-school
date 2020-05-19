@@ -485,7 +485,7 @@ final object Music {
       case Rest(d) => d
     }
 
-    def modDur(c: Control, d: Duration) = c match {
+    def modDur(c: Control, d: Duration): Duration = c match {
       case Tempo(r) => d / r
       case _ => d
     }

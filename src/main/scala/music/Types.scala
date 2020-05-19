@@ -87,7 +87,7 @@ final object Types {
     case Prim(Rest(d)) => Prim(Rest(d))
     case :+:(m, n) => transM(ap, m) :+: transM (ap, n)
     case :=:(m, n) => transM(ap, m) :=: transM (ap, n)
-    case Modify(control, music) => Modify(control, transM(ap, mp))
+    case Modify(control, music) => Modify(control, transM(ap, music))
   }
 
   def toAbsPitches(pitches: List[Pitch]): List[AbsPitch] = pitches.map(absPitch(_))

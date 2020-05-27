@@ -10,7 +10,7 @@ import performance.Performance.hsomPerform
 import performance.players.DefPlayer
 import performance.{Context, Metronome}
 
-object GenerationMain extends App {
+object SelfSimilarMain extends App {
 
   example1()
   example2()

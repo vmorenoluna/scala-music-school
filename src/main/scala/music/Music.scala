@@ -36,7 +36,7 @@ final object Music {
 
   def tempo[A](d: Duration, m: Music[A]): Music[A] = Modify(Tempo(d), m)
 
-  def transpose[A](i: AbsPitch, m: Music[A]): Music[A] = Modify(Transpose(i), m)
+  def transpose[A](i: AbsPitch, m: Music[A]): Music[A] = Modify(Transpose(i), m) // TODO Curring
 
   def instrument[A](i: InstrumentName, m: Music[A]): Music[A] = Modify(Instrument(i), m)
 

@@ -1,5 +1,6 @@
 package generation
 
+import music.Music
 import scala.collection.MapView
 import scala.util.Random
 
@@ -20,7 +21,7 @@ object GenerativeGrammar {
   type Rand = Double
   type ReplFun[A] = List[List[(Rule[A], Prob)]] => (A, LazyList[Rand]) => (A, LazyList[Rand])
 
-  private def gen[A](f: ReplFun[A], grammar: Grammar[A], seed: Int): LazyList[A] = {
+  def gen[A](f: ReplFun[A], grammar: Grammar[A], seed: Int): LazyList[A] = {
     val newRules: Sto[A] = toStoRules(grammar.rules)
     val rand = new Random(seed)
     val rands = LazyList.continually(rand.nextDouble())
@@ -36,7 +37,7 @@ object GenerativeGrammar {
     val lists: List[List[(Rule[A], Rand)]] = rules.rules.groupBy(_._1.lhs).values.toList
     val newRules: List[List[(Rule[A], Prob)]] = lists.map(probDist)
     // https://github.com/scala/bug/issues/9909#issuecomment-292441829
-    lazy val result : LazyList[(A, LazyList[Rand])] = xs #:: result.map(tuple => f(newRules)(tuple._1, tuple._2))
+    lazy val result: LazyList[(A, LazyList[Rand])] = xs #:: result.map(tuple => f(newRules)(tuple._1, tuple._2))
     result.map(_._1)
   }
 
@@ -76,8 +77,63 @@ object GenerativeGrammar {
   }
 
   private def sameLHS[A](t1: (Rule[A], Prob), t2: (Rule[A], Prob)): Boolean =
-    t1._1.lhs == t2._1.lhs  // TODO eq type class
+    t1._1.lhs == t2._1.lhs // TODO eq type class
 
+}
 
+object MusicGrammar {
+
+  sealed trait LSys[A]
+
+  final case class N[A](symbol: A) extends LSys[A]
+
+  final case class :+[A](m: LSys[A], n: LSys[A]) extends LSys[A]
+
+  final case class ::[A](m: LSys[A], n: LSys[A]) extends LSys[A]
+
+  final case class Id[A]() extends LSys[A]
+
+  import generation.GenerativeGrammar.{Prob, Rule, Rand}
+
+  def replFun[A](rules: List[List[(Rule[LSys[A]], Prob)]])(s: LSys[A], rands: LazyList[Rand]): (LSys[A], LazyList[Rand]) =
+    s match {
+      case a :+ b => {
+        val (a1, rands1) = replFun(rules)(a, rands)
+        val (b1, rands2) = replFun(rules)(b, rands1)
+        (:+(a1, b1), rands2)
+      }
+      case a :: b => {
+        val (a1, rands1) = replFun(rules)(a, rands)
+        val (b1, rands2) = replFun(rules)(b, rands1)
+        (::(a1, b1), rands2)
+      }
+      case Id() => (Id[A], rands)
+      case N(x) => (getNewRHS(rules, N(x), rands.head), rands.tail)
+    }
+
+  private def getNewRHS[A](rrs: List[List[(Rule[LSys[A]], Prob)]], ls: LSys[A], rand: Rand): LSys[A] =
+    rrs.find(l => l.head._1.lhs == ls) match {
+      case Some(rs) => loop(rs, rand)
+      case None => throw new Exception("Remove this exception in getNewRHS method") // TODO
+    }
+
+  private def loop[A](rs: List[(Rule[LSys[A]], Prob)], rand: Rand): LSys[A] = rs match {
+    case (r, p) +: rs => if (rand <= p) r.rhs else loop(rs, rand)
+    case Nil => throw new Exception("Remove this exception in loop method") // TODO
+  }
+
+  // interpretation rules
+  type IR[A, B] = List[(A, Music[B] => Music[B])]
+
+  def interpret[A, B](lsys: LSys[A], r: IR[A, B], m: Music[B]): Music[B] =
+    lsys match {
+      case ::(a, b) => interpret(a, r, interpret(b, r, m))
+      case :+(a, b) => interpret(a, r, m) :+: interpret(b, r, m)
+      case Id() => m
+      case N(x) => r.find(ir => ir._1 == x) match {
+        case Some(ir) => ir._2(m)
+        case None => throw new Exception("Remove this exception in interpret method") // TODO
+      }
+    }
 
 }

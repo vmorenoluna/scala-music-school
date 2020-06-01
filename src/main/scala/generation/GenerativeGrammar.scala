@@ -65,10 +65,12 @@ object GenerativeGrammar {
     rules.map(a => (a, prb))
   }
 
-  private def checkProbs[A](rules: List[(Rule[A], Prob)]): Boolean =
-    checkSum(
-      rules.groupBy(_._1.lhs).values.toList.flatten
-    ) == true
+  private def checkProbs[A](rules: List[(Rule[A], Prob)]): Boolean = {
+    val groupedRules: List[List[(Rule[A], Prob)]] = rules.groupBy(_._1.lhs).values.toList
+    groupedRules.forall(
+      checkSum(_) == true
+    )
+  }
 
   private def checkSum[A](rules: List[(Rule[A], Prob)]): Boolean = {
     val eps = 0.001
@@ -83,7 +85,7 @@ object GenerativeGrammar {
 
 object MusicGrammar {
 
-  sealed trait LSys[A]
+  sealed trait LSys[+A]
 
   final case class N[A](symbol: A) extends LSys[A]
 
@@ -93,9 +95,14 @@ object MusicGrammar {
 
   final case class Id[A]() extends LSys[A]
 
+  sealed trait LFun
+  final case class Inc() extends LFun
+  final case class Dec() extends LFun
+  final case class Same() extends LFun
+
   import generation.GenerativeGrammar.{Prob, Rule, Rand}
 
-  def replFun[A](rules: List[List[(Rule[LSys[A]], Prob)]])(s: LSys[A], rands: LazyList[Rand]): (LSys[A], LazyList[Rand]) =
+  def replFun(rules: List[List[(Rule[LSys[LFun]], Prob)]])(s: LSys[LFun], rands: LazyList[Rand]): (LSys[LFun], LazyList[Rand]) =
     s match {
       case a :+ b => {
         val (a1, rands1) = replFun(rules)(a, rands)
@@ -107,17 +114,17 @@ object MusicGrammar {
         val (b1, rands2) = replFun(rules)(b, rands1)
         (::(a1, b1), rands2)
       }
-      case Id() => (Id[A], rands)
+      case Id() => (Id(), rands)
       case N(x) => (getNewRHS(rules, N(x), rands.head), rands.tail)
     }
 
-  private def getNewRHS[A](rrs: List[List[(Rule[LSys[A]], Prob)]], ls: LSys[A], rand: Rand): LSys[A] =
+  private def getNewRHS[A](rrs: List[List[(Rule[A], Prob)]], ls: A, rand: Rand): A =
     rrs.find(l => l.head._1.lhs == ls) match {
       case Some(rs) => loop(rs, rand)
       case None => throw new Exception("Remove this exception in getNewRHS method") // TODO
     }
 
-  private def loop[A](rs: List[(Rule[LSys[A]], Prob)], rand: Rand): LSys[A] = rs match {
+  private def loop[A](rs: List[(Rule[A], Prob)], rand: Rand): A = rs match {
     case (r, p) +: rs => if (rand <= p) r.rhs else loop(rs, rand)
     case Nil => throw new Exception("Remove this exception in loop method") // TODO
   }

@@ -13,6 +13,11 @@ import performance.players.DefPlayer
 
 object GenerativeGrammarMain extends App {
 
+  sealed trait LFun
+  final case class Inc() extends LFun
+  final case class Dec() extends LFun
+  final case class Same() extends LFun
+
   val ir: IR[LFun, Pitch] = List(
     (Inc(), transM(1, _)),
     (Dec(), transM(-1, _)),
@@ -35,7 +40,7 @@ object GenerativeGrammarMain extends App {
 
   val g1: Grammar[LSys[LFun]] = Grammar(same, Uni(List(r1b,r1a,r2b,r2a,r3a,r3b,r3c)))
 
-  val value = gen(replFun, g1, 42)(7)
+  val value = gen(replFun[LFun], g1, 42)(7)
   val music: Music[Pitch] = interpret(
     value,
     ir,

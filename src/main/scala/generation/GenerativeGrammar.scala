@@ -95,14 +95,9 @@ object MusicGrammar {
 
   final case class Id[A]() extends LSys[A]
 
-  sealed trait LFun
-  final case class Inc() extends LFun
-  final case class Dec() extends LFun
-  final case class Same() extends LFun
-
   import generation.GenerativeGrammar.{Prob, Rule, Rand}
 
-  def replFun(rules: List[List[(Rule[LSys[LFun]], Prob)]])(s: LSys[LFun], rands: LazyList[Rand]): (LSys[LFun], LazyList[Rand]) =
+  def replFun[A](rules: List[List[(Rule[LSys[A]], Prob)]])(s: LSys[A], rands: LazyList[Rand]): (LSys[A], LazyList[Rand]) =
     s match {
       case a :+ b => {
         val (a1, rands1) = replFun(rules)(a, rands)

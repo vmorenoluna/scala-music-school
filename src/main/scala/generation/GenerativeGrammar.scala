@@ -25,9 +25,9 @@ object GenerativeGrammar {
     val newRules: Sto[A] = toStoRules(grammar.rules)
     val rand = new Random(seed)
     val rands = LazyList.continually(rand.nextDouble())
-    if (checkProbs(newRules.rules))
+    if (checkProbs(newRules.rules)) {
       generate(f, newRules, (grammar.start, rands))
-    else {
+    } else {
       println("Stochastic rule-set is malformed.")
       LazyList.empty
     }

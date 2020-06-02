@@ -40,9 +40,8 @@ object GenerativeGrammarMain extends App {
 
   val g1: Grammar[LSys[LFun]] = Grammar(same, Uni(List(r1b,r1a,r2b,r2a,r3a,r3b,r3c)))
 
-  val value = gen(replFun[LFun], g1, 42)(7)
   val music: Music[Pitch] = interpret(
-    value,
+    gen(replFun[LFun], g1, 42)(6),
     ir,
     c(5)(en)
   )
